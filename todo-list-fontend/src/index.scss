@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer components{
+    .base-auth{
+        @apply w-[1000px] mx-auto py-4;
+    }
+    .menu-hover{
+        @apply hover:bg-gray-100 transition-all cursor-pointer
+    }
+    .box-task{
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    }
+    .box-calen{
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+    .task-button:hover{
+        .icon-task-button{
+            @apply text-white bg-primary;
+            transition: all 0.3s ;
+        }
+        .content-task-button{
+            @apply text-primary;
+            transition: all 0.3s ;
+        }
+    }
+    .bg-task{
+        background-color: #00000036;
+    }
+    .add-section:hover{
+        transition: 0.9s all;
+        > .section-item {
+            
+            display: block;
+            transition: 2s all;
+        }
+        .section-item{
+            position: relative;
+            &:before{
+                position: absolute;
+                content: "";
+                top: 50%;
+                left: -60px;
+                transform: translateY(-50%);
+                width: 50%;
+                height: 2px;
+                background: red;
+            }
+            &:after{
+                position: absolute;
+                content: "";
+                top: 50%;
+                right: -60px;
+                transform: translateY(-50%);
+                width: 50%;
+                height: 2px;
+                background: red;
+            }
+            
+        }
+       
+    }
+}
