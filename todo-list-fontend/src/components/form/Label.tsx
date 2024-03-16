@@ -1,12 +1,12 @@
 import React from 'react';
 type Label = {
-    classNames: string,
+    className: string,
     htmlfor: string,
     children: React.ReactNode | string
 }
-const Label = ({classNames,htmlfor,children}:Label) => {
+const Label = ({className,htmlfor,children}:Label) => {
     return (
-        <label htmlFor={htmlfor} className={`${classNames}`}>{children}</label>
+        <label htmlFor={htmlfor} className={`${className}`}>{children}</label>
     );
 };
 

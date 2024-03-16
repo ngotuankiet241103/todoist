@@ -9,7 +9,7 @@ const SubProjectItem = ({
   code,
   isList,
 }: {
-  title: string;
+  title?: string;
   tasks: TaskListResponse | [];
   code: string;
   isList: boolean;

@@ -4,14 +4,13 @@ import com.todo.todolistbackend.dto.TaskDTO;
 import com.todo.todolistbackend.request.TaskRequest;
 import com.todo.todolistbackend.request.TaskUpdateRequest;
 
-import java.util.Date;
 import java.util.List;
 
 public interface TaskService {
     Object save(TaskRequest taskRequest);
 
 
-    List<TaskDTO> findAllByProjectCode(String projectCode);
+    List<TaskDTO> findAllByProjectCode(String projectCode, List<String> priorityCode, List<String> labelCode);
 
     Object findAllByExpiredAt(String date);
 

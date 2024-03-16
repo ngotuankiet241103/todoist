@@ -6,13 +6,17 @@ import taskSlice, { TaskSlice } from "./reducer/taskSlice";
 import labelSlice, { LabelSlice } from "./reducer/labelSlice";
 import taskDetailSlice, { TaskDetail } from "./reducer/taskDetailSlice";
 import stateSlice, { stateApp } from "./reducer/stateSlice";
+import tasksSlice, { TasksSlice } from "./reducer/tasksSlice";
+import prioritySlice, { PrioritySlice } from "./reducer/prioritySlice";
 export type state = {
     user: User
     project: Project
     task: TaskSlice
     label: LabelSlice
     detail: TaskDetail
-    status: stateApp
+    status: stateApp,
+    tasks: TasksSlice
+    priority: PrioritySlice
 }
 export const store = configureStore<state>({
     reducer: {
@@ -21,6 +25,8 @@ export const store = configureStore<state>({
         task: taskSlice,
         label: labelSlice,
         detail: taskDetailSlice,
-        status: stateSlice
+        status: stateSlice,
+        tasks: tasksSlice,
+        priority: prioritySlice
     }
 })

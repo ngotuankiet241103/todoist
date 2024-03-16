@@ -24,12 +24,18 @@ const labelSlice = createSlice(
                     ...state
                     
                 ]
+                console.log(state);
+                
                 return state;
+            },
+            deleteLabel: (state,actions) => {
+            
+                return state.filter(state => state.id != actions.payload);
             }
            
         }
 
     }
 )
-export const {setLabel,updateLabel} = labelSlice.actions;
+export const {setLabel,updateLabel,deleteLabel} = labelSlice.actions;
 export default labelSlice.reducer;

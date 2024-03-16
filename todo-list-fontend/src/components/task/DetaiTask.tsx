@@ -6,7 +6,7 @@ import { showTag } from "../../utils/tag";
 import { useDispatch } from "react-redux";
 import { resetDetailTask } from "../../redux/reducer/taskDetailSlice";
 import ButtonList from "../button/ButtonList";
-import requestApi, { updateMethod } from "../../helper/api";
+import  { updateMethod } from "../../helper/api";
 import FormProject, { SectionItem } from "../form/FormProject";
 import { useSelector } from "react-redux";
 import { state } from "../../redux/store";

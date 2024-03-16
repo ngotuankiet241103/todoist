@@ -4,14 +4,14 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AuthPage from './components/auth/AuthPage'
 import Header from './components/web/Header'
-import HomePage from './pages/HomePage'
+import HomePage from './pages/HomePage copy'
 import LoginSucess from './components/auth/LoginSucess'
 import CreateName from './components/auth/CreateName'
 import { useEffect } from 'react'
 import InboxPage from './pages/InboxPage'
 import UpcomingTaskPage from './pages/UpcomingTaskPage'
 
-import ProjectPage from './pages/ProjectPage'
+import ProjectPage from './pages/ProjectPage copy'
 import FilterPage from './pages/FilterPage'
 
 function App() {

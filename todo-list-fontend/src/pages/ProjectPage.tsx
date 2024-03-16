@@ -5,7 +5,7 @@ import TaskList from "../components/task/TaskList";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { getListStyle, reorder } from "../utils/dragContext";
 import useOpenModal from "../hooks/useOpenModal";
-import TaskAdd from "../components/task/TaskAdd";
+
 import { useSelector } from "react-redux";
 import { state } from "../redux/store";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,8 @@ import { updateTask } from "../redux/reducer/taskSlice";
 import DetaiTask from "../components/task/DetaiTask";
 import AddSection from "../components/task/AddSection";
 import useRender from "../hooks/useRender";
+import useChangeView from "../hooks/useChangeView";
+import BaseWeb from "../components/web/BaseWeb";
 
 async function handleUpdateTask<T>(api: string, data: T) {
   try {
@@ -36,13 +38,14 @@ const ProjectPage = () => {
   const dispatch = useDispatch();
   const task = useSelector((state: state) => state.task);
   const isRender = useSelector((state: state) => state.status.isRender);
-  const {handleRender} = useRender();
+  const { handleRender } = useRender();
   const { isShow, handleToggleModel } = useOpenModal(false);
   const [sections, setSection] = useState<SectionItem[]>([]);
   const detail = useSelector((state: state) => state.detail);
   const { isShow: showModal, task: taskDetail } = detail;
-  const {isShow: isAddSection, handleToggleModel: handleToggleSection} = useOpenModal(false);
-  console.log(isAddSection);
+  const { isShow: isAddSection, handleToggleModel: handleToggleSection } = useOpenModal(false);
+
+  const { state } = useChangeView(projectCode || "");
   useEffect(() => {
     const getTaskByProjectCode = () => {
       dispatch(getTaskByProjectCodeThunk(projectCode));
@@ -61,24 +64,18 @@ const ProjectPage = () => {
       getSecionByProjectCode();
     }
     getTaskByProjectCode();
-  }, [isRender,projectCode]);
+  }, [projectCode,isRender]);
   useEffect(() => {
     if (sections.length > 0) {
       sections.forEach((section) => {
         dispatch(getTaskByProjectCodeThunk(projectCode, section.code));
       });
     }
-  }, [sections.length, isRender,projectCode]);
+  }, [projectCode,isRender,sections]);
   const onDragStart = (event) => {
     console.log(event);
 
-    // const element = document.querySelector(`#${event.draggableId}`);
-    // if (element) {
-    //   element.parentElement.classList.add(`border-red-400`);
-    //   element.parentElement.classList.add(`bg-gray-400`);
-    // }
-
-    /*...*/
+    
   };
   const onDragEnd = async (result) => {
     console.log(result);
@@ -132,71 +129,98 @@ const ProjectPage = () => {
     // element.classList.remove("border-red-400");
   };
   const handleAddSection = (sectionName: string) => {
-    async function addSecction<T>(api:string,data:T){
+    async function addSecction<T>(api: string, data: T) {
       try {
-        const response = await postMethod(api,data)
-        if(response && response.status === 200){
+        const response = await postMethod(api, data);
+        if (response && response.status === 200) {
           handleToggleSection();
           handleRender();
         }
       } catch (error) {
         console.log(error);
-        
       }
     }
-    addSecction(`/sections/${projectCode}`,{name: sectionName})
-
-  }
-
+    addSecction(`/sections/${projectCode}`, { name: sectionName });
+  };
+  const handleClick = () => {
+    if (isShow) {
+      handleToggleModel();
+    }
+  };
   return (
     <>
-      <div className="w-[800px] mx-auto py-4">
-        <DragDropContext
-          // isDragging={(event) => console.log(event)}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-        >
-          <Droppable droppableId={`${projectCode}`}>
-            {(provided, snapshot) => (
-              <>
-                <div
-                  ref={provided.innerRef}
-                  style={getListStyle(snapshot.isDraggingOver)}
-                >
-                  
-                  <TaskList tasks={task[`${projectCode}`]}></TaskList>
-                   
-                  {provided.placeholder}
-                </div>
-              </>
-            )}
-          </Droppable>
-          <div className="add-section h-[100px] overflow-x-hidden">
-            {
-              !isAddSection ? 
-              <span onClick={handleToggleSection} className="hidden section-item text-center transition-all text-red-600 cursor-pointer">
-              Add section
-            </span>
-              :
-              <AddSection clickCancle={handleToggleSection} clickSubmit={handleAddSection}></AddSection>
-            }
-           
+      <BaseWeb
+        page="project"
+        label={projectCode || ""}
+        isShow={isShow}
+        onClick={handleToggleModel}
+      >
+        <div onClick={handleClick}>
+          <div
+            className={` mx-auto py-4 h-[100vh] ${state.isList ? "w-[800px]" : "w-full"}`}
+          >
+            <DragDropContext
+              // isDragging={(event) => console.log(event)}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+            >
+              <div className={`${state.isList ? "" : "grid grid-cols-4 gap-4"} `}>
+                <Droppable droppableId={`${projectCode}`}>
+                  {(provided, snapshot) => (
+                    <>
+                      
+                      <div
+                        ref={provided.innerRef}
+                        style={getListStyle(snapshot.isDraggingOver)}
+                      >
+                        <h2 className="font-semibold mb-2">(No section)</h2>
+                        <TaskList
+                          isList={state.isList}
+                          tasks={task[`${projectCode}`]}
+                        ></TaskList>
+
+                        {provided.placeholder}
+                      </div>
+                    </>
+                  )}
+                </Droppable>
+                
+                {sections &&
+                  sections.length > 0 &&
+                  sections.map((section) => (
+                    <SubProjectItem
+                      isList={state.isList}
+                      code={section.code}
+                      key={section.id}
+                      title={section.name}
+                      tasks={task[`${section.code}`]}
+                    ></SubProjectItem>
+                  ))}
+                  {!state.isList && (
+                  <div className="mb-2">
+                    <div className="add-section h-[100px] overflow-x-hidden">
+                    {!isAddSection ? (
+                      <h2
+                        onClick={handleToggleSection}
+                        className="w-full borde border-gray-300 text-gray-400 cursor-pointer hover:text-primary"
+                      >
+                        Add section
+                      </h2>
+                    ) : (
+                      <AddSection
+                        clickCancle={handleToggleSection}
+                        clickSubmit={handleAddSection}
+                      ></AddSection>
+                    )}
+                  </div>
+                  </div>
+                )}
+              </div>
+            </DragDropContext>
           </div>
-          {sections &&
-            sections.length > 0 &&
-            sections.map((section) => (
-              <SubProjectItem
-                code={section.code}
-                key={section.id}
-                title={section.name}
-                tasks={task[`${section.code}`]}
-              ></SubProjectItem>
-            ))}
-        </DragDropContext>
-        
-        
-      </div>
-      {showModal && taskDetail && <DetaiTask task={taskDetail}></DetaiTask>}
+          {showModal && taskDetail && <DetaiTask task={taskDetail}></DetaiTask>}
+        </div>
+      </BaseWeb>
     </>
   );
 };

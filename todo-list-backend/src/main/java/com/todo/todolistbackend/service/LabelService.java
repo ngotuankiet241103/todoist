@@ -20,4 +20,6 @@ public interface LabelService {
     Set<Label> findAllByCode(List<String> labelCodes);
 
     Object findAll();
+
+    Object deleteById(long id);
 }

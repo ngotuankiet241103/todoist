@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Task } from "../../components/form/FormTask";
+
 import { TaskResponse } from "../../components/task/TaskItem";
 export interface TaskDetail {
     isShow: boolean,

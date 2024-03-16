@@ -12,28 +12,21 @@ import useExpandMenu from "../hooks/useExpandMenu";
 import useOpenModal from "../hooks/useOpenModal";
 import BaseWeb from "../components/web/BaseWeb";
 import useChangeView from "../hooks/useChangeView";
+import SubProjectItem from "../components/project/SubProjectItem copy";
+import useProjectPage from "../hooks/useProjectPage";
 
 // using some little inline style helpers to make the app look okay
 const key = "isToday";
 const HomePage = () => {
+  const {state} = useChangeView(key);
   const detail = useSelector((state: state) => state.detail);
-  const task = useSelector((state: state) => state.task);
+  const {task,titles} = useProjectPage("today",state.group,state.filter);
   const { isShow: showModal, task: taskDetail } = detail;
-  const { isExpand } = useExpandMenu();
   const dispatch = useDispatch();
   const date = new Date();
   const today = formatDate(date);
-  
-  const {state} = useChangeView(key);
+  const { isShow, handleToggleModel } = useOpenModal(false);
   console.log(state);
-  
-  const isRender = useSelector((state : state) => state.status.isRender)
-  useEffect(() => {
-    const getAllTaskToday = () => {
-      dispatch(taskThunk(today));
-    };
-    getAllTaskToday();
-  }, [isRender]);
   const onDragStart = (event) => {
     console.log(event);
   };
@@ -64,10 +57,37 @@ const HomePage = () => {
     // const element = document.querySelector(`#${result.draggableId}`);
     // element.classList.remove("border-red-400");
   };
+  const handleClick = () => {
   
+    if (isShow) {
+      handleToggleModel();
+    }
+  };
+  const Render = () => {
+    console.log(task);
+
+    return (
+      <>
+        {!task && <h1>Loading...</h1>}
+        {task &&
+          Object.entries(task).map(([key, value], index) => (
+            <>
+              <SubProjectItem
+                isList={state.isList}
+                code={key}
+                key={index}
+                title={titles && titles[index]}
+                tasks={value}
+              ></SubProjectItem>
+              
+            </>
+          ))}
+      </>
+    );
+  };
   return (
-    <BaseWeb page="today" label={key} >
-      <div >
+    <BaseWeb page="today"  label={key} isShow={isShow} onClick={handleToggleModel}>
+      <div onClick={handleClick}>
         <div
           className={` mx-auto py-4 h-[100vh] ${
             !state.isList ? "w-full" : "w-[800px]"
@@ -80,19 +100,9 @@ const HomePage = () => {
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
             >
-              <Droppable droppableId="droppable-1">
-                {(provided, snapshot) => (
-                  <>
-                    <div
-                      ref={provided.innerRef}
-                      style={getListStyle(snapshot.isDraggingOver)}
-                    >
-                      {task && <TaskList isList={state.isList} tasks={task[`${today}`]}></TaskList>}
-                      {provided.placeholder}
-                    </div>
-                  </>
-                )}
-              </Droppable>
+               <div className={`${state.isList ? "" : "task-list"}`}>
+                  <Render></Render>
+               </div>
             </DragDropContext>
 
             {showModal && taskDetail && (

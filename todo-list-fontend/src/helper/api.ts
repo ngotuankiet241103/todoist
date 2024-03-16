@@ -152,3 +152,14 @@ export async function updateMethod<T>(url: string, value: T)  {
       console.log(error);
     }
   }
+  export async function deleteMethod<T>(url: string, value: T)  {
+    try {
+      
+      const response = await requestApi(url, "DELETE", value);
+      return response;
+
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }

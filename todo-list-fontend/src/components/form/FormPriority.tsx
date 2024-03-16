@@ -1,10 +1,12 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { env } from "../../helper/env";
+
+import React, { useEffect} from "react";
+
 import useOpenModal from "../../hooks/useOpenModal";
 import { flag } from "../../constaints/flag";
 import IconMenu from "../web/IconMenu";
 import BoxTitle from "./BoxTitle";
+import { useSelector } from "react-redux";
+import { state } from "../../redux/store";
 export type priority = {
   id: number;
   name: string;
@@ -19,29 +21,18 @@ type formPriority = {
   priority: priority | undefined;
 };
 const FormPriority = React.memo (({ onclick, isDefault, priority }: formPriority) => {
-  const [priorities, setPriorities] = useState<Priorities>([]);
+  console.log(useSelector((state: state) => state.priority));
+  const priorities = useSelector((state: state) => state.priority);
+  
+  
   const { isShow, handleToggleModel } = useOpenModal(false);
   console.log(priorities);
-
-  useEffect(() => {
-    async function getPriorities() {
-      try {
-        const response = await axios.get(`${env.VITE_BASE_API}/priorities`);
-        if (response.status === 200) {
-          setPriorities(response.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getPriorities();
-  }, []);
   useEffect(() => {
     if (isDefault) {
-      const priority = priorities.find(
+      const priority = priorities.length > 0 &&  priorities.find(
         (priority) => priority.level === "default"
       ) || { id: 0, name: "priority", code: "priority", level: "default" };
-      priority.name = "Priority";
+      
       onclick(priority);
     }
   }, [priorities]);

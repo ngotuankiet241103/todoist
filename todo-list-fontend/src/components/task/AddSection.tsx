@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
+import ButtonForm from "../button/ButtonForm";
 type AddSection = {
-  clickCancle: () => void;
+  clickCancle: (e?: React.MouseEvent<HTMLElement,MouseEvent>) => void;
   clickSubmit: (value: string) => void;
 };
+
 const AddSection = ({ clickCancle, clickSubmit }: AddSection) => {
   const [isAllow, setAllow] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -32,22 +34,7 @@ const AddSection = ({ clickCancle, clickSubmit }: AddSection) => {
         placeholder="Name this section"
         
       />
-      <div className="mt-2 flex  gap-2">
-        <button
-          className={`px-4 py-2 rounded-lg bg-primary text-white text-[16px] ${
-            !isAllow ? `cursor-not-allowed opacity-50` : `cursor-pointer`
-          }`}
-          onClick={handleAddSection}
-        >
-          Add section
-        </button>
-        <button
-          className="px-4 py-2 rounded-lg bg-gray-200 text-[16px]"
-          onClick={clickCancle}
-        >
-          Cancel
-        </button>
-      </div>
+      <ButtonForm clickSubmit={handleAddSection} isAllow={isAllow} title="Add section" clickCancle={clickCancle}></ButtonForm>
     </div>
   );
 };

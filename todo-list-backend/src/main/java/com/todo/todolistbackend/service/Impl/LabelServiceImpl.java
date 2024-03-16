@@ -4,18 +4,25 @@ import com.todo.todolistbackend.auth.UserPrincipal;
 import com.todo.todolistbackend.dto.LabelDTO;
 import com.todo.todolistbackend.entity.Label;
 import com.todo.todolistbackend.entity.Project;
+import com.todo.todolistbackend.entity.Task;
 import com.todo.todolistbackend.entity.User;
 import com.todo.todolistbackend.mapping.LabelMapping;
 import com.todo.todolistbackend.repository.LabelRepository;
+import com.todo.todolistbackend.repository.TaskRepository;
 import com.todo.todolistbackend.request.LabelRequest;
+import com.todo.todolistbackend.response.ApiResponse;
 import com.todo.todolistbackend.service.LabelService;
 import com.todo.todolistbackend.service.UserService;
 import com.todo.todolistbackend.util.HandleStrings;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,6 +32,7 @@ public class LabelServiceImpl implements LabelService {
     private final LabelRepository labelRepository;
     private final UserService userService;
     private final LabelMapping labelMapping;
+    private final TaskRepository taskRepository;
     @Override
     public Object save(LabelRequest labelRequest) {
         long count = labelRepository.count();
@@ -80,6 +88,23 @@ public class LabelServiceImpl implements LabelService {
 
         return null;
     }
+
+    @Override
+    @Transactional
+    public Object deleteById(long id) {
+        List<Long> tasks =taskRepository.findByLabelId(id);
+        if(tasks.size() > 0){
+            tasks.stream().forEach(task -> taskRepository.deleteById(task));
+        }
+
+        labelRepository.deleteById(id);
+        Map<String,Object> response = new HashMap<>();
+        response.put("status", HttpStatus.OK);
+        response.put("id",id);
+        response.put("message","delete success label");
+        return response;
+    }
+
     private List<LabelDTO> mappingAll(List<Label> labels){
         return labels.stream()
                 .map(label -> mappingSingle(label)).collect(Collectors.toList());

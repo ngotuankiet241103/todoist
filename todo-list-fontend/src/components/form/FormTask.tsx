@@ -8,7 +8,7 @@ import { formatDate } from "../../utils/formatDate";
 import { setTask } from "../../redux/reducer/taskSlice";
 import { useDispatch } from "react-redux";
 import OtherForm from "./OtherForm";
-import labelThunk from "../../redux/thunk/labelThunk";
+
 import { Label } from "../../redux/reducer/labelSlice";
 import { useSelector } from "react-redux";
 import { state } from "../../redux/store";
@@ -40,6 +40,7 @@ export type Task = {
 };
 
 const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
+  
   const { handleRender } = useRender();
   const inputTaskRef = useRef<HTMLInputElement>(null);
   const inputDesRef = useRef<HTMLInputElement>(null);
@@ -58,8 +59,8 @@ const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
       section: task?.section,
     },
   };
+  
   const { state, setDate, setPriority, setTag, reset } = useTask(initialValue);
-
   const [isAllow, setAllow] = useState(task?.title);
   const [isToday, setIsToday] = useState(state.date?.mark === "Today");
   const dispathRedux = useDispatch();
@@ -118,15 +119,7 @@ const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
       }
 
       if (response.status === 200) {
-        if (task?.id) {
-          handleRender();
-        } else {
-          
-          data.expiredAt &&
-            dispathRedux(
-              setTask({ key: formatDate(data.expiredAt), data: response.data })
-            );
-        }
+        handleRender();
         reset();
         onclick();
       }
@@ -140,9 +133,7 @@ const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
       setChooseLabel(true);
     }
   };
-  useEffect(() => {
-    dispathRedux(labelThunk());
-  }, []);
+  
   const handleChooseLabel = (label: Label) => {
     setChooseLabel(false);
     setSelected([...labelSelect, label]);
@@ -230,6 +221,7 @@ const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
                 <FormProject
                   onclick={handleChooseTag}
                   tag={state.tag}
+                  isInbox={typeof task === 'undefined'}
                 ></FormProject>
               </div>
               <ButtonList

@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -61,24 +60,37 @@ public class TaskServiceImpl implements TaskService {
                 .user(user)
                 .priority(priority)
                 .isCompleted(false)
-                .expiredAt(formatDate(taskRequest.getExpiredAt()))
+                .expiredAt(formatDate(taskRequest.getExpiredAt(),23,59,59))
                 .build();
         return task;
     }
-    private Date formatDate(Date date){
+    private Date formatDate(Date date,int hour,int minutes,int second){
         Instant instant = date.toInstant();
         // Create a ZonedDateTime from the Instant
         // You can specify the time zone you want to use
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
         // Extract LocalDate from ZonedDateTime
         LocalDate localDate = zonedDateTime.toLocalDate();
-        LocalDateTime lastMoment = LocalDateTime.of(localDate, LocalTime.of(23, 59, 59));
+        LocalDateTime lastMoment = LocalDateTime.of(localDate, LocalTime.of(hour, minutes, second));
         return Date.from(lastMoment.atZone(ZoneId.systemDefault()).toInstant());
     }
     @Override
-    public List<TaskDTO> findAllByProjectCode(String projectCode) {
+    public List<TaskDTO> findAllByProjectCode(String projectCode, List<String> priorityCode, List<String> labelCode) {
+        List<Task> tasks = null;
+        if(priorityCode.size() > 0  && labelCode.size()> 0){
+            tasks = taskRepository.findByProjectCodeWithConditional(projectCode,priorityCode,labelCode);
+        }
+        else if(priorityCode.size() > 0 && labelCode != null){
+            tasks = taskRepository.findByProjectCodeAndPriorityCode(projectCode,priorityCode);
 
-        List<Task> tasks = taskRepository.findAllByProjectCode(projectCode);
+        }
+        else if(priorityCode != null && labelCode.size() > 0){
+            tasks = taskRepository.findByProjectCodeAndLabelCode(projectCode,labelCode);
+        }
+        else{
+            tasks = taskRepository.findAllByProjectCode(projectCode);
+        }
+
         return mappingList(tasks);
     }
 
@@ -98,7 +110,8 @@ public class TaskServiceImpl implements TaskService {
             LocalDate localDateTommorow = zonedDateTime.toLocalDate();
             Date yesterday = Date.from(localDateYesterday.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date tommorow = Date.from(localDateYesterday.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()) ;
-            List<Task> tasks = taskRepository.findByExpiredAtAndUserId(yesterday,tommorow,userPrincipal.getId());
+            tommorow = formatDate(tommorow,00,00,00);
+            List<Task> tasks = taskRepository.findByExpiredAtAndUserId(tommorow,userPrincipal.getId());
             return mappingList(tasks);
         } catch (ParseException e) {
             // Handle the exception if the date string is not in the expected format
@@ -144,7 +157,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Object updateExpiredAt(TaskUpdateRequest taskUpdateRequest) {
         Task task = taskRepository.findById(taskUpdateRequest.getId()).orElseThrow(() -> new BadRequestException("Task is not exits"));
-        task.setExpiredAt(formatDate(taskUpdateRequest.getExpiredAt()));
+        task.setExpiredAt(formatDate(taskUpdateRequest.getExpiredAt(),23,59,59));
         return singleMapping(taskRepository.save(task));
     }
 

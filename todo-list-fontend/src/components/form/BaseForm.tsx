@@ -36,14 +36,14 @@ const BaseForm = ({isSubmitting,onclick}: Form) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-10">
                     <FormInput>
-                        <Label htmlfor="email" classNames="absolute top-0 left-0 px-2 py-1 text-[14px]">Email</Label>
+                        <Label htmlfor="email" className="absolute top-0 left-0 px-2 py-1 text-[14px]">Email</Label>
                         <Input classNames="border-none outline-none py-0 px-0" placehol="Enter your email" control={control} name="email"  typeinput="text" ></Input>
                     </FormInput>
                     {errors.email && <ErrorNoti message={errors.email?.message}></ErrorNoti>}
                 </div>
                 <div className="mb-10 ">
                     <FormInput>
-                        <Label htmlfor="password" classNames="absolute top-0 left-0 px-2 py-1 text-[14px] ">Password</Label>
+                        <Label htmlfor="password" className="absolute top-0 left-0 px-2 py-1 text-[14px] ">Password</Label>
                         <Input classNames="border-none outline-none py-0 px-0" placehol="Enter your password" control={control} name="password"  typeinput="password"></Input>
                     </FormInput>
                     {errors.password && <ErrorNoti message={errors.password?.message}></ErrorNoti>}

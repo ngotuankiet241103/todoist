@@ -2,7 +2,7 @@ import  { useState } from 'react';
 import OAuth2 from '../components/auth/OAuth2';
 import BaseForm, { FormData } from '../components/form/BaseForm';
 import { Token, methodPost, setToken } from '../helper/api';
-import { NavLink, redirect } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import BaseAuthPage from '../components/auth/BaseAuthPage';
 
 
@@ -25,7 +25,7 @@ const LoginPage = () => {
                 setToken(token)
                 console.log(param);
                 
-                 window.location.href = `${param}`
+                window.location.href = `${param}`
             }
         } catch (error) {
             console.log(error);

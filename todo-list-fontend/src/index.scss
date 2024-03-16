@@ -26,6 +26,7 @@
     }
     .bg-task{
         background-color: #00000036;
+        
     }
     .add-section:hover{
         transition: 0.9s all;
@@ -58,6 +59,17 @@
             }
             
         }
-       
+    }
+    .task-list{
+        
+       @apply flex gap-4;
+        > div{
+            @apply min-w-[260px];
+        }
+    }
+    .modal-label:hover{
+        .modal-label-item{
+            display: block;
+        }
     }
 }

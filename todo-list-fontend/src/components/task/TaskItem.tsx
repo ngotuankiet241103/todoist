@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import FormTask, { Task } from "../form/FormTask";
+import React, { Suspense, lazy, useRef, useState } from "react";
+import  { Task } from "../form/FormTask";
 import { ProjectInfo } from "../../redux/reducer/projectSlice";
 import { SectionItem } from "../form/FormProject";
 import { showTag } from "../../utils/tag";
@@ -12,6 +12,9 @@ import { priority } from "../form/FormPriority";
 import { bgColorPriority, colorPriority } from "../../constaints/flag";
 import { updateMethod } from "../../helper/api";
 import useOpenModal from "../../hooks/useOpenModal";
+import Hello from "./Hello";
+const FormTask = lazy(() => import('../form/FormTask'))
+
 
 export type TaskResponse = Pick<Task, "title" | "description"> & {
   id: number;
@@ -24,15 +27,17 @@ export type TaskResponse = Pick<Task, "title" | "description"> & {
 };
 type TaskItem = {
   task: TaskResponse;
+  isList: boolean
   innerref: (element: HTMLElement | null) => void;
   style: any;
   [key: string]: any;
 };
-const TaskItem = ({ task, innerref, style, ...props }: TaskItem) => {
+const TaskItem = ({ task, isList, innerref, style, ...props }: TaskItem) => {
   const checkBoxRef = useRef<HTMLDivElement>(null);
   const { isShow, handleToggleModel } = useOpenModal(false);
   const dispatch = useDispatch();
   const [isHover, setHover] = useState(false);
+  
   const handleClickTask = (value: TaskResponse) => {
     const newURL = `/app/task/${task.code}`;
     console.log(value);
@@ -80,7 +85,7 @@ const TaskItem = ({ task, innerref, style, ...props }: TaskItem) => {
           style={style}
           onClick={() => handleClickTask(task)}
           {...props}
-          className="flex gap-2 justify-start task-item cursor-pointer py-2 mb-2 border border-transparent border-b-gray-300"
+          className={`flex gap-2 justify-start task-item cursor-pointer py-2 mb-2 border ${isList ? ' border-transparent border-b-gray-300' : 'border-gray-300 rounded-lg px-2'}`}
         >
           <div className="py-2">
             <div
@@ -125,7 +130,19 @@ const TaskItem = ({ task, innerref, style, ...props }: TaskItem) => {
           </div>
         </div>
       ) : (
-        <FormTask task={task} isFixed={false} visibile={true} onclick={handleToggleModel}></FormTask>
+       
+        <>
+        
+          <Hello task={task}></Hello>
+          <div>
+            <Suspense fallback={<div>loading</div>}>
+
+              <FormTask task={task}  isFixed={false} visibile={true} onclick={handleToggleModel}></FormTask>
+            </Suspense>
+          
+          </div>
+        </>
+       
       )}
     </>
   );

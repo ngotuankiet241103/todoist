@@ -7,7 +7,6 @@ import { setInboxProject, setProject } from '../reducer/projectSlice';
 
 const projectThunk = ()  => async (dispatch,state)  => {
   
-    console.log(dispatch);
     try {
         const response = await requestApi("/projects","GET")
         console.log(response);
@@ -19,8 +18,6 @@ const projectThunk = ()  => async (dispatch,state)  => {
     }
 }
 export const projectInfoThunk = ()  => async (dispatch,state)  => {
-  
-    console.log(dispatch);
     try {
         const response = await requestApi("/projects/inbox","GET")
         console.log(response);

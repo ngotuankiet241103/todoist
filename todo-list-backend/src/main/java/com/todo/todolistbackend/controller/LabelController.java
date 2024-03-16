@@ -20,4 +20,8 @@ public class LabelController {
     public ResponseEntity<?> addLabel(@RequestBody @Valid LabelRequest labelRequest){
         return ResponseEntity.ok(labelService.save(labelRequest));
     }
+    @DeleteMapping("/labels/{id}")
+    public ResponseEntity<?> deleteLabelById(@PathVariable("id") long id){
+        return ResponseEntity.ok(labelService.deleteById(id));
+    }
 }

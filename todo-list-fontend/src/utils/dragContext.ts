@@ -3,7 +3,7 @@ import { TaskListResponse } from "../components/task/TaskList";
 export const grid = 8;
 export const getListStyle = (isDraggingOver) => ({
   
-  padding: grid,
+  
   width: '100%'
 });
 export const reorder = (

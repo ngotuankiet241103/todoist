@@ -1,6 +1,9 @@
-import React from 'react';
+
 
 const TaskAdd = ({className,onclick}: {className?: string,onclick: () => void}) => {
+    console.log("3124124");
+    
+    
     return (
         <div className={`${className}`}>
             <div className='mb-2 flex gap-2 px-2 task-button py-2 cursor-pointer' onClick={onclick}>

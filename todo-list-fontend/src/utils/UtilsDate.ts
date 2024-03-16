@@ -7,8 +7,6 @@ export class UtilDate {
   private date: Date;
   private dates: dates;
   constructor(currentDate: Date) {
-    console.log(currentDate.getDate());
-    
     this.date = currentDate;
     this.dates = this.generateDates();
   }

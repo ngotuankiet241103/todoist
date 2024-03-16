@@ -1,14 +1,14 @@
-import React, { useRef, useState } from 'react';
+import  { useRef, useState } from 'react';
 import BaseAuthPage from './BaseAuthPage';
 import Button from '../form/Button';
 
 import ErrorNoti from '../form/ErrorNoti';
 import requestApi from '../../helper/api';
-import { useNavigate } from 'react-router-dom';
+
 
 const CreateName = () => {
     const [isSubmitting,setSubmitting] = useState(false);
-    const redirect = useNavigate();
+
     const [error,setError] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const handleUpdateInfo = async () => {

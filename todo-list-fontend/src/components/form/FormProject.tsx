@@ -24,7 +24,11 @@ type formProject = {
 const FormProject = ({isInbox = true,tag,onclick} : formProject ) => {
     const project = useSelector((state: state) => state.project)
     const {isShow,handleToggleModel} = useOpenModal(false);
+    console.log(project);
+    console.log(isInbox);
     
+    
+    console.log(tag);
     
     const handleClick = (project?: ProjectInfo, 
         section?: SectionItem) => {
