@@ -12,7 +12,7 @@ public interface TaskService {
 
     List<TaskDTO> findAllByProjectCode(String projectCode, List<String> priorityCode, List<String> labelCode);
 
-    Object findAllByExpiredAt(String date);
+    Object findAllByExpiredAt(String date, List<String> priorityCode, List<String> labelCode);
 
     Object findAllByProjectCodeAndSectionCode(String projectCode, String sectionCode);
 
@@ -31,4 +31,8 @@ public interface TaskService {
     Object updateCompleted(TaskUpdateRequest taskUpdateRequest);
 
     Object updateTask(TaskRequest taskRequest,long  id);
+
+    Object findTaskUpcoming(String from, String to, List<String> priorityCode, List<String> labelCode);
+
+    Object findAllByLabelCode(String labelCode, List<String> priorityCode, List<String> labelsCode);
 }

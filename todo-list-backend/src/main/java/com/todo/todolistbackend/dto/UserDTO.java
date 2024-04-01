@@ -12,5 +12,8 @@ import lombok.Setter;
 public class UserDTO {
     private String name;
     private String avatar;
+    private String email;
+    private String provider;
+    private boolean isConnected;
 
 }

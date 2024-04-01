@@ -6,14 +6,21 @@ const LoginSucess = () => {
     const url = window.location.search;
     const param = new URLSearchParams(url);
     const accToken  = param.get("token");
-    const redirect = useNavigate();
+    const redirect_uri = param.get("redirect_uri");
     const token : Token = {
         access_token: accToken,
         refresh_token: accToken
     }
     setToken(token);
     useLayoutEffect(() => {
-        redirect("/app/today")
+      
+        if(redirect_uri){
+            window.location.href = `${param}`
+        }
+        else{
+          
+            window.location.href = "/"
+        }
     },[])
    
     return (

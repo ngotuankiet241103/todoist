@@ -2,6 +2,7 @@ package com.todo.todolistbackend.controller;
 
 import com.todo.todolistbackend.auth.UserPrincipal;
 import com.todo.todolistbackend.request.UserRequest;
+import com.todo.todolistbackend.request.UserUpdateRequest;
 import com.todo.todolistbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,30 @@ public class UserController {
     @PostMapping("/profile/name")
     public ResponseEntity<?> createUserName(@RequestBody  UserRequest user){
         return ResponseEntity.ok(userService.createUserName(user));
+    }
+    @PutMapping("/profile/password")
+    public ResponseEntity<?> updatePassword(@RequestBody UserUpdateRequest user){
+        return ResponseEntity.ok(userService.updatePassword(user));
+
+    }
+    @PutMapping("/profile/password/add")
+    public ResponseEntity<?> updateAddPassword(@RequestBody UserUpdateRequest user){
+        return ResponseEntity.ok(userService.updateAddPassword(user));
+
+    }
+    @PutMapping("/profile/name")
+    public ResponseEntity<?> updateName(@RequestBody UserUpdateRequest user){
+        return ResponseEntity.ok(userService.updateName(user));
+
+    }
+    @PutMapping("/profile/email")
+    public ResponseEntity<?> updateEmail(@RequestBody UserUpdateRequest user){
+        return ResponseEntity.ok(userService.updateEmail(user));
+
+    }
+    @PutMapping("/profile/avatar")
+    public ResponseEntity<?> updateAvatar(@RequestBody UserUpdateRequest user){
+        return ResponseEntity.ok(userService.updateAvatar(user));
+
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 public class UserMappingImpl implements UserMapping {
     @Override
     public UserDTO toDTO(User user) {
-        return new UserDTO(user.getName(), user.getImageUrl());
+        boolean isConnected = user.getPassword() != null ? true : false;
+        return new UserDTO(user.getName(), user.getImageUrl(),user.getEmail(),user.getProvider().toString(),isConnected);
     }
 }

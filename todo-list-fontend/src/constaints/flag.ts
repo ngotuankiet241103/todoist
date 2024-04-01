@@ -15,7 +15,7 @@ export const colorPriority : flag = {
 }
 export const bgColorPriority : flag = {
     "default": `white`,
-    "low": ` blue-400`,
-    "medium": `orange-400`,
-    "high": `red-400`
+    "low": `blue-100`,
+    "medium": `orange-100`,
+    "high": `red-100`
 }

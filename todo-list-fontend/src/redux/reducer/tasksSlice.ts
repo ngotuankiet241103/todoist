@@ -1,19 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { TaskListResponse } from "../../components/task/TaskList"
-import { act } from "react-dom/test-utils";
 
-
+export type TaskSliceKey = "today" | "project" | "upcoming" | "label"
 export type TasksSlice = {
-    today?: {
+    [key in TaskSliceKey]?: {
         [key: string]: TaskListResponse | []
     }
-    project?: {
-        [key: string]: TaskListResponse | []
-    }
+   
 }
-// const date = new Date();
-// const today : string = formatDate(date);
-
 const initialValue : TasksSlice = {};
 const tasksSlice = createSlice(
     {

@@ -1,10 +1,7 @@
 package com.todo.todolistbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 @Entity
@@ -13,6 +10,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +23,8 @@ public class Token {
     private Date expiredAt;
     @Column
     private boolean isActive = true;
+    @ManyToOne
+    private User user;
 
     public Token(String token, Date expiredAt, String type) {
         this.token = token;

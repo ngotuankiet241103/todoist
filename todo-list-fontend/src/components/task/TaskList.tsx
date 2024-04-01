@@ -2,6 +2,8 @@ import TaskItem, { TaskResponse } from "./TaskItem";
 import { Draggable } from "react-beautiful-dnd";
 import useOpenModal from "../../hooks/useOpenModal";
 import { Suspense, lazy } from "react";
+import { useSelector } from "react-redux";
+import { state } from "../../redux/store";
 const TaskAdd = lazy(() => import("./TaskAdd"));
 
 const FormTask = lazy(() => import("../form/FormTask"));
@@ -24,11 +26,14 @@ export const getItemStyle = (draggableStyle, isDragging, isDraggingOver) => {
 const TaskList = ({
   tasks,
   isList,
+  isUpcoming
 }: {
   tasks: TaskListResponse;
   isList: boolean;
+  isUpcoming: string
 }) => {
   const { isShow, handleToggleModel } = useOpenModal(false);
+  const isDragging = useSelector((state: state) => state.status.isDragging);
   return (
     <div className="w-full">
       {tasks &&
@@ -54,9 +59,11 @@ const TaskList = ({
           </Draggable>
         ))}
       <Suspense fallback={<div>loading</div>}>
-        {!isShow && <TaskAdd onclick={() => handleToggleModel()}></TaskAdd>}
+        {!isShow && <TaskAdd className={`${isDragging ? '' : 'active'}`} onclick={() => handleToggleModel()}></TaskAdd>}
         {isShow && (
           <FormTask
+            isList={isList}
+            isUpcoming={isUpcoming}
             isFixed={false}
             visibile={true}
             onclick={() => handleToggleModel()}

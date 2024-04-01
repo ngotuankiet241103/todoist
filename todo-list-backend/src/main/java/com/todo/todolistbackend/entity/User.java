@@ -13,10 +13,8 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User  implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class User extends BaseEntity  implements Serializable {
+
     @Column
     private String email;
     @Column

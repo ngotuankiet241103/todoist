@@ -5,8 +5,11 @@ import com.todo.todolistbackend.entity.AuthProvider;
 import com.todo.todolistbackend.entity.User;
 import com.todo.todolistbackend.exception.OAuth2AuthenticationProcessingException;
 import com.todo.todolistbackend.repository.UserRepository;
+import com.todo.todolistbackend.service.LabelService;
+import com.todo.todolistbackend.service.ProjectService;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -21,8 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
-
-
+    private final ProjectService projectService;
+    private final LabelService labelService;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         System.out.println(oAuth2UserRequest);
@@ -39,9 +42,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
     private String getEmail(OAuth2UserInfo oAuth2UserInfo){
+        String fbPrefix = "facebook_";
+        String fbSufix = "@user.todone.com";
         return (String) (StringUtils.isNotEmpty((String) oAuth2UserInfo.getAttributes().get(("email"))) ?
                         oAuth2UserInfo.getAttributes().get(("email")) :
-                        oAuth2UserInfo.getAttributes().get(("id")));
+                (fbPrefix + oAuth2UserInfo.getAttributes().get(("id"))) + fbSufix);
     }
     private boolean checkInfo(OAuth2UserInfo oAuth2UserInfo){
         String email = getEmail(oAuth2UserInfo);
@@ -57,18 +62,28 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<User> userOptional = userRepository.findByEmail(getEmail(oAuth2UserInfo));
+        Optional<User> userOptional = userRepository.findByProviderId(oAuth2UserInfo.getId());
         System.out.println(userOptional);
         User user = null;
         if(userOptional.isPresent()) {
             user = userOptional.get();
-            System.out.println(oAuth2UserRequest.getClientRegistration().getRegistrationId());
-            if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
-                throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
-                        user.getProvider() + " account. Please use your " + user.getProvider() +
-                        " account to login.");
+            if(!user.getEmail().equals(getEmail(oAuth2UserInfo))){
+                user.setProviderId(null);
+                user.setProvider(AuthProvider.local);
+                user.setRole("USER");
+                userRepository.save(user);
+                user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
             }
-            user = updateExistingUser(user, oAuth2UserInfo);
+            else{
+                System.out.println(oAuth2UserRequest.getClientRegistration().getRegistrationId());
+                if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+                    throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
+                            user.getProvider() + " account. Please use your " + user.getProvider() +
+                            " account to login.");
+                }
+                user = updateExistingUser(user, oAuth2UserInfo);
+            }
+
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
@@ -77,6 +92,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+
+        Optional<User> userOp = userRepository.findByEmail(getEmail(oAuth2UserInfo));
+        if(userOp.isPresent()){
+            return  userOp.get();
+        }
         User user = new User();
         String provider = oAuth2UserRequest.getClientRegistration().getRegistrationId();
         System.out.println(oAuth2UserRequest.getClientRegistration().getRegistrationId());
@@ -88,9 +108,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setImageUrl(getPicture(provider,oAuth2UserInfo));
         user.setRole("OAUTH2_USER");
         System.out.println(user);
-        return userRepository.save(user);
+        userRepository.save(user);
+        initialDetachUser(user);
+        return user;
     }
 
+    @Async
+    public void initialDetachUser(User user){
+        projectService.createInbox(user);
+        projectService.createProject(user);
+        labelService.createLabel(user);
+    }
     private String getPicture(String provider, OAuth2UserInfo auth2UserInfo) {
         switch (provider) {
             case "google":

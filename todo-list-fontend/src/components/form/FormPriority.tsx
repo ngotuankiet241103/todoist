@@ -19,8 +19,9 @@ type formPriority = {
   onclick: (priority: priority) => void;
   isDefault: boolean;
   priority: priority | undefined;
+  isList: boolean,
 };
-const FormPriority = React.memo (({ onclick, isDefault, priority }: formPriority) => {
+const FormPriority = React.memo (({ onclick, isDefault, priority,isList }: formPriority) => {
   console.log(useSelector((state: state) => state.priority));
   const priorities = useSelector((state: state) => state.priority);
   
@@ -51,7 +52,7 @@ const FormPriority = React.memo (({ onclick, isDefault, priority }: formPriority
               className="text-[14px]"
               icon={flag[`${priority.level}`]}
             ></IconMenu>
-            {priority.name}
+            {isList && priority.name}
           </BoxTitle>
         )}
         {isShow && (

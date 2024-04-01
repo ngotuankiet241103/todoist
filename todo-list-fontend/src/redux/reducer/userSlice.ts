@@ -6,7 +6,10 @@ export type User = {
 export type Profile = Info  | null
 export type Info = {
     name: string,
-    avatar: string
+    avatar: string,
+    email: string
+    provider: "google" | "facebook" | "local"
+    connected: boolean
     
 }
 const initialValue: User = {

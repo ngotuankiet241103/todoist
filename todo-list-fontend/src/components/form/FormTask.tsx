@@ -24,6 +24,8 @@ type formTask = {
   visibile: boolean;
   onclick: () => void;
   task?: TaskResponse;
+  isUpcoming?: string
+  isList: boolean
 };
 export type Tag = {
   project?: ProjectInfo;
@@ -39,15 +41,16 @@ export type Task = {
   expiredAt: Date | null;
 };
 
-const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
+const FormTask = ({ isFixed, visibile, onclick, task,isUpcoming,isList }: formTask) => {
+  console.warn("show");
   
   const { handleRender } = useRender();
   const inputTaskRef = useRef<HTMLInputElement>(null);
   const inputDesRef = useRef<HTMLInputElement>(null);
   const dateTask = task?.expiredAt
     ? new UtilDate(new Date(task.expiredAt))
-    : new UtilDate(new Date());
-  const initialValue: Data = {
+    : isUpcoming ? new UtilDate(new Date(isUpcoming)) : new UtilDate(new Date());
+  const initialValue: Data = { 
     date: {
       date: dateTask.getDate(),
       day: dateTask.getDay(),
@@ -62,15 +65,13 @@ const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
   
   const { state, setDate, setPriority, setTag, reset } = useTask(initialValue);
   const [isAllow, setAllow] = useState(task?.title);
-  const [isToday, setIsToday] = useState(state.date?.mark === "Today");
-  const dispathRedux = useDispatch();
+  const [isToday, setIsToday] = useState(isUpcoming ? false : state.date?.mark === "Today");
   const [isChooseLabel, setChooseLabel] = useState(false);
   const label = useSelector((state: state) => state.label);
   const [labelSelect, setSelected] = useState<Label[]>(task?.labels || []);
   const handleChooseDate = (date: Day) => {
     setDate(date);
   };
-
   const handleChoosePriority = useCallback((priority: priority) => {
     setPriority(priority);
   }, []);
@@ -203,6 +204,7 @@ const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
                     priority={state.priority}
                     isDefault={true}
                     onclick={handleChoosePriority}
+                    isList={isList}
                   />
                 </div>
                 {labelSelect.length > 0 && (
@@ -229,6 +231,7 @@ const FormTask = ({ isFixed, visibile, onclick, task }: formTask) => {
                 isAllow={isAllow}
                 clickCancle={() => onclick()}
                 clickSubmit={handleAddTask}
+                isList={isList}
               ></ButtonList>
             </div>
             {isChooseLabel && (

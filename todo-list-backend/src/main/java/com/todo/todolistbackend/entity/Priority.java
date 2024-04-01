@@ -10,10 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Priority {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Priority extends BaseEntity {
+
     @Column
     private String name;
     @Column

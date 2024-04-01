@@ -15,12 +15,8 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Task extends BaseEntity implements Serializable {
     @Column
-
     private String title;
     @Column
     private String description;

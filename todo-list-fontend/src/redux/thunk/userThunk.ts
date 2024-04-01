@@ -11,6 +11,8 @@ const userThunk = ()  => async (dispatch,state)  => {
         const response = await requestApi("/users/profile","GET","",true)
         console.log(response);
         if(response.status === 200 && response.data){
+            
+            
             dispatch(setUser({userInfo: response.data}))
         }
     } catch (error) {

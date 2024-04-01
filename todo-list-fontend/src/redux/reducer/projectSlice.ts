@@ -7,10 +7,12 @@ export type ProjectInfo = {
     task_all?: number
 }
 export type Project = {
+    all: ProjectInfo[]
     inbox: ProjectInfo | undefined,
     myProject: ProjectInfo[]
 }
 const initialValue : Project = {
+    all: [],
     inbox: undefined,
     myProject: []
 };
@@ -34,10 +36,19 @@ const projectSlice = createSlice(
                     
                 }
                 return state;
+            },
+            setAllProject: (state,actions) => {
+                state = {
+                    ...state,
+                    all: [...state.all,...actions.payload]
+                }
+                return state;
             }
+            
+
         }
 
     }
 )
-export const {setProject,setInboxProject} = projectSlice.actions;
+export const {setProject,setInboxProject,setAllProject} = projectSlice.actions;
 export default projectSlice.reducer;

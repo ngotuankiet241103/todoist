@@ -16,6 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskController {
     private final TaskService taskService;
+    @GetMapping("/tasks/upcoming")
+    public ResponseEntity<?> getTaskUpcoming(@RequestParam(name = "from",defaultValue = "") String from,
+                                             @RequestParam(name = "to",defaultValue = "") String to,
+                                             @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,
+                                             @RequestParam(name = "labelCode",defaultValue = "") List<String> labelCode
+                                             ){
+        return ResponseEntity.ok(taskService.findTaskUpcoming(from,to,priorityCode,labelCode));
+    }
+    @GetMapping("/tasks/label/{label-code}")
+    public ResponseEntity<?> getTasksByLabelCode(@PathVariable("label-code") String projectCode,
+                                                   @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,
+                                                   @RequestParam(name = "labelCode",defaultValue = "") List<String> labelCode){
+        return ResponseEntity.ok(taskService.findAllByLabelCode(projectCode,priorityCode,labelCode));
+    }
     @GetMapping("/tasks/{project-code}")
     public ResponseEntity<?> getTasksByProjectCode(@PathVariable("project-code") String projectCode,
                                                    @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,
@@ -29,8 +43,10 @@ public class TaskController {
         return ResponseEntity.ok(taskService.findAllByProjectCodeAndSectionCode(projectCode,sectionCode));
     }
     @GetMapping("/tasks")
-    public ResponseEntity<?> getTasksByExpiredAt(@RequestParam("expired_at") String date){
-        return ResponseEntity.ok(taskService.findAllByExpiredAt(date));
+    public ResponseEntity<?> getTasksByExpiredAt(@RequestParam("expired_at") String date,
+                                                 @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,
+                                                 @RequestParam(name = "labelCode",defaultValue = "") List<String> labelCode){
+        return ResponseEntity.ok(taskService.findAllByExpiredAt(date,priorityCode,labelCode));
     }
     @PostMapping("/tasks/add")
     public ResponseEntity<?> addTask(@RequestBody @Valid TaskRequest taskRequest){

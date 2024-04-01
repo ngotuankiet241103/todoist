@@ -19,7 +19,7 @@ const HomePage = () => {
   const detail = useSelector((state: state) => state.detail);
   const task = useSelector((state: state) => state.task);
   const { isShow: showModal, task: taskDetail } = detail;
-  const { isExpand } = useExpandMenu();
+
   const dispatch = useDispatch();
   const date = new Date();
   const today = formatDate(date);
@@ -70,7 +70,7 @@ const HomePage = () => {
       <div >
         <div
           className={` mx-auto py-4 h-[100vh] ${
-            !state.isList ? "w-full" : "w-[800px]"
+            !state.isList ? "md:w-full" : "md:w-[800px] px-4"
           }`}
         >
           <h1 className="font-semibold">Today</h1>

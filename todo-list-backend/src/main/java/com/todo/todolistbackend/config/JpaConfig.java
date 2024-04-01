@@ -25,7 +25,7 @@ public class JpaConfig {
             // Retrieve the current user or system ID
             // Example:
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            return Optional.ofNullable(authentication.getName());
+            return Optional.ofNullable(authentication != null ? authentication.getName() : null);
         }
 
 

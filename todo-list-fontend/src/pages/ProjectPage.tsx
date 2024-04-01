@@ -112,21 +112,7 @@ const ProjectPage = () => {
         };
         handleUpdateTask(`/tasks/project`, data);
       }
-    } else {
-      // const item = reorder(
-      //   task[`${}`],
-      //   result.source.index,
-      //   result.destination.index
-      // );
-      // setTasks(item)
-      //   dispatch(setTasks({key: today,data: item}))
-      //   setItems({
-      //     ...items,
-      //     [key]: item,
-      //   });
-    }
-    // const element = document.querySelector(`#${result.draggableId}`);
-    // element.classList.remove("border-red-400");
+    } 
   };
   const handleAddSection = (sectionName: string) => {
     async function addSecction<T>(api: string, data: T) {

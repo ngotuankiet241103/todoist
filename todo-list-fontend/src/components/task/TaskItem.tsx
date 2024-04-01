@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useRef, useState } from "react";
+import React, { Suspense, lazy, useEffect, useRef, useState } from "react";
 import  { Task } from "../form/FormTask";
 import { ProjectInfo } from "../../redux/reducer/projectSlice";
 import { SectionItem } from "../form/FormProject";
@@ -37,7 +37,13 @@ const TaskItem = ({ task, isList, innerref, style, ...props }: TaskItem) => {
   const { isShow, handleToggleModel } = useOpenModal(false);
   const dispatch = useDispatch();
   const [isHover, setHover] = useState(false);
-  
+  useEffect(() => {
+    if(checkBoxRef.current){
+      const element = checkBoxRef.current;
+      element.style.borderColor = `${colorPriority[task.priority.level]}`;
+      element.classList.add(`bg-${bgColorPriority[task.priority.level]}`);
+    }
+  },[task.priority.level])
   const handleClickTask = (value: TaskResponse) => {
     const newURL = `/app/task/${task.code}`;
     console.log(value);
@@ -92,9 +98,8 @@ const TaskItem = ({ task, isList, innerref, style, ...props }: TaskItem) => {
               ref={checkBoxRef}
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
-              className={`relative w-[18px] h-[18px] rounded-full border-2  border-${
-                colorPriority[`${task.priority.level}`]
-              }-600 bg-${bgColorPriority[`${task.priority.level}`]} `}
+              className={`relative w-[18px] h-[18px] rounded-full  border-2 
+                `}
             >
               <div
                 onClick={handleCheckComplete}
@@ -137,7 +142,7 @@ const TaskItem = ({ task, isList, innerref, style, ...props }: TaskItem) => {
           <div>
             <Suspense fallback={<div>loading</div>}>
 
-              <FormTask task={task}  isFixed={false} visibile={true} onclick={handleToggleModel}></FormTask>
+              <FormTask isList={false} task={task}  isFixed={false} visibile={true} onclick={handleToggleModel}></FormTask>
             </Suspense>
           
           </div>

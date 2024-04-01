@@ -1,5 +1,6 @@
 package com.todo.todolistbackend.auth;
 
+import com.todo.todolistbackend.config.AppProperties;
 import com.todo.todolistbackend.entity.AuthProvider;
 import com.todo.todolistbackend.entity.Label;
 import com.todo.todolistbackend.entity.Token;
@@ -26,6 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,7 @@ public class AuthenticationService {
     private final LabelService labelService;
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenRepository tokenRepository;
+    private final AppProperties appProperties;
     public AuthenticationResponse signUp(SignUpRequest userRequest) {
         User user = User.builder()
                 .email(userRequest.getEmail())
@@ -58,16 +63,29 @@ public class AuthenticationService {
         String accessToken = tokenProvider.generateAccessToken(userPrincipal);
         authenticationResponse.setAccess_token(refreshToken);
         authenticationResponse.setRefresh_token(accessToken);
-        saveToken(refreshToken,tokenProvider.getAppProperties().getAuth().getRefreshExpiration());
+        generateRefreshToken(authenticationResponse.getRefresh_token(),userPrincipal.getId());
         return authenticationResponse;
     }
     private void saveToken(String re_token,long time){
         Token token = new Token(re_token,new Date(time),"Bearer");
         tokenRepository.save(token);
     }
+    @Async
+    private void generateRefreshToken(String token,long userId){
+        User user = new User();
+        user.setId(userId);
+        Token tokenE = Token.builder()
+                .expiredAt(new Date(System.currentTimeMillis() + appProperties.getAuth().getRefreshExpiration()))
+                .token(token)
+                .type("Bearer")
+                .isActive(true)
+                .user(user)
+                .build();
+        tokenRepository.save(tokenE);
+    }
 
     @Async
-    private void initialDetachUser(User user){
+    public void initialDetachUser(User user){
         projectService.createInbox(user);
         projectService.createProject(user);
         labelService.createLabel(user);
@@ -77,23 +95,33 @@ public class AuthenticationService {
         authenticationManager.authenticate(token);
         UserPrincipal userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(loginRequest.getEmail());
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-
         authenticationResponse.setAccess_token(tokenProvider.generateAccessToken(userPrincipal));
         authenticationResponse.setRefresh_token(tokenProvider.generateRefreshToken(userPrincipal));
+        generateRefreshToken(authenticationResponse.getRefresh_token(),userPrincipal.getId());
         return authenticationResponse;
 
     }
 
     public Object refreshToken(TokenRequest tokenRequest) {
         Token token = tokenRepository.findByToken(tokenRequest.getRefresh_token()).orElseThrow(() -> new BadRequestException("Refresh token is not exist"));
-        if(token.isActive()){
+        if(!token.isActive()){
             return generateError();
         }
         String userEmail;
         try {
-
             userEmail = tokenProvider.extractUsername(tokenRequest.getRefresh_token());
+            UserPrincipal userPrincipal= (UserPrincipal) customUserDetailsService.loadUserByUsername(userEmail);
+            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+            String refreshToken = tokenProvider.generateRefreshToken(userPrincipal);
+            String accessToken = tokenProvider.generateAccessToken(userPrincipal);
+            authenticationResponse.setAccess_token(refreshToken);
+            authenticationResponse.setRefresh_token(accessToken);
+            return authenticationResponse;
         } catch (ExpiredJwtException ex) {
+            if(token.isActive()){
+                token.setActive(false);
+                tokenRepository.save(token);
+            }
           generateError();
         }
         return null;
@@ -101,5 +129,19 @@ public class AuthenticationService {
     private ErrorResponse generateError(){
         ErrorResponse errorResponse = new ErrorResponse(new Date(),"Refresh token hết hạn!Please login", HttpStatus.UNAUTHORIZED.toString());
         return errorResponse;
+    }
+
+    public Object logout(TokenRequest tokenRequest) {
+        Optional<Token> opToken = tokenRepository.findByToken(tokenRequest.getRefresh_token());
+        if(opToken.isPresent()){
+            Token token = opToken.get();
+            token.setActive(false);
+            tokenRepository.save(token);
+        }
+        Map<String,String> response = new HashMap<>();
+        response.put("message","logout success");
+        response.put("status", HttpStatus.OK.toString());
+        System.out.println(response);
+        return response;
     }
 }

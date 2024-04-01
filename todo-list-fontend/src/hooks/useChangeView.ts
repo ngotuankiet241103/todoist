@@ -2,14 +2,14 @@
 import { useSelector } from 'react-redux';
 import { state } from '../redux/store';
 import storage from '../helper/storage';
-import { updateState} from '../redux/reducer/stateSlice';
+import { Filter, updateState} from '../redux/reducer/stateSlice';
 import { useDispatch } from 'react-redux';
-import { ProjectGroupKey } from './useProjectPage';
+import { ProjectGroupKey } from './useTasks';
 
 const useChangeView = (label: string) => {
-    let state = useSelector((state: state) => state.status[`${label}`]);
-    console.log(state);
-    
+    let state  = useSelector((state: state) => state.status[`${label}`]);
+    console.log(label);
+
     const dispatch = useDispatch();
     if(typeof state == "boolean"){
         state = {
@@ -21,9 +21,29 @@ const useChangeView = (label: string) => {
             }
         }
     }
+    if(state){
+        const check =  Object.values(state).every(value => typeof value == "string");
+        if(check){
+            state = {
+                isList: false,
+                group: "default",
+                filter: {
+                    priorityCode: [],
+                    labelCode: []
+                }
+            }
+        }
+    }
     if(!state){
-        const value : {[key:string]: boolean} =  storage.get<{[key:string]: boolean}>(label);
-
+        const value : {[key:string]: boolean} =  storage.get<{[key:string]: boolean}>(label) || {
+            isList: false,
+            group: "default",
+            filter: {
+                priorityCode: [],
+                labelCode: []
+            }
+        };
+      
         dispatch(updateState({key: label,value}))
     }
    

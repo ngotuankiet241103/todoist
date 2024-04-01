@@ -13,6 +13,12 @@ import UpcomingTaskPage from './pages/UpcomingTaskPage'
 
 import ProjectPage from './pages/ProjectPage copy'
 import FilterPage from './pages/FilterPage'
+import LabelPage from './pages/LabelPage'
+import SettingPage from './pages/SettingPage'
+import SettingAccountPage from './components/settings/SettingAccountPage'
+import SettingAccountEmail from './components/settings/SettingAccountEmail'
+import SettingAccountPassword from './components/settings/SettingAccountPassword'
+import SettingThemePage from './components/settings/SettingThemePage'
 
 function App() {
  
@@ -26,8 +32,17 @@ function App() {
           <Route path='/app/today' element={<HomePage></HomePage>}></Route>
           <Route path='/app/upcoming' element={<UpcomingTaskPage></UpcomingTaskPage>}></Route>
           <Route path='/app/project/:projectCode' element={<ProjectPage></ProjectPage>}></Route>
+          <Route path='/app/label/:labelCode' element={<LabelPage></LabelPage>}></Route>
           <Route path='/app/filters-labels' element={<FilterPage></FilterPage>}></Route>
+          <Route path='/app/settings' element={<SettingPage></SettingPage>}>
+            <Route path='/app/settings/account' element={<SettingAccountPage></SettingAccountPage>}></Route>
+            <Route path='/app/settings/account/email' element={<SettingAccountEmail></SettingAccountEmail>}></Route>
+            <Route path='/app/settings/account/password' element={<SettingAccountPassword></SettingAccountPassword>}></Route>
+            <Route path='/app/settings/theme' element={<SettingThemePage></SettingThemePage>}></Route>
+
+          </Route>
         </Route>
+        
         <Route path='/auth' element={<AuthPage></AuthPage>}>
           <Route path='/auth/login' element={<LoginPage></LoginPage>}></Route>
           <Route path='/auth/register' element={<RegisterPage></RegisterPage>}></Route>

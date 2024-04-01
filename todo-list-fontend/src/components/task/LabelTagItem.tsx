@@ -32,7 +32,7 @@ const LabelTagItem = ({label,innerref,style,isBorder,...props}: LabelTagItem) =>
     return (
         <div ref={innerref} style={style} {...props}>
             <div className={`flex px-1 py-1  justify-between border-y-2 ${isBorder ? '' : 'border-t-transparent'} border-gray-300`}>
-                <Labelitem name={label.name}></Labelitem>
+                <Labelitem code={label.code} name={label.name}></Labelitem>
                 <div className='flex gap-2 '>
                     <div className='relative modal-label'>
                         <span><i className="fa-solid fa-ellipsis"></i></span>

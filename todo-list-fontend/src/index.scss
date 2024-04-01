@@ -14,16 +14,7 @@
     .box-calen{
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     }
-    .task-button:hover{
-        .icon-task-button{
-            @apply text-white bg-primary;
-            transition: all 0.3s ;
-        }
-        .content-task-button{
-            @apply text-primary;
-            transition: all 0.3s ;
-        }
-    }
+   
     .bg-task{
         background-color: #00000036;
         
@@ -35,30 +26,7 @@
             display: block;
             transition: 2s all;
         }
-        .section-item{
-            position: relative;
-            &:before{
-                position: absolute;
-                content: "";
-                top: 50%;
-                left: -60px;
-                transform: translateY(-50%);
-                width: 50%;
-                height: 2px;
-                background: red;
-            }
-            &:after{
-                position: absolute;
-                content: "";
-                top: 50%;
-                right: -60px;
-                transform: translateY(-50%);
-                width: 50%;
-                height: 2px;
-                background: red;
-            }
-            
-        }
+        
     }
     .task-list{
         
@@ -70,6 +38,26 @@
     .modal-label:hover{
         .modal-label-item{
             display: block;
+        }
+    }
+    .side-bar{
+        position: relative;
+        animation: forwards fadeIn 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+       
+        
+    }
+    @keyframes fadeIn {
+        0%{
+            transform: translateX(-280px);
+            opacity: 0;
+        }
+        50%{
+            transform: translateX(0px);
+            opacity: 1;
+        }
+        100%{
+            transform: translateX(0px);
+            opacity: 1;
         }
     }
 }

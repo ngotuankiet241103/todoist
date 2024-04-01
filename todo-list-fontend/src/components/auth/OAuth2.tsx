@@ -12,7 +12,7 @@ export type Login = {
 
 const list: Login[] = [
     {url: generateUrl(env.VITE_BASE_LOGIN,"google",env.VITE_REDICRECT_LOGIN),item: `Connect with google`,icon: `${google}`},
-    {url: generateUrl(env.VITE_BASE_LOGIN,"faceboolk",env.VITE_REDICRECT_LOGIN),item: `Connect with facebook`,icon: `${facebook}`}
+    {url: generateUrl(env.VITE_BASE_LOGIN,"facebook",env.VITE_REDICRECT_LOGIN),item: `Connect with facebook`,icon: `${facebook}`}
     
 ]
 function generateUrl(urlLogin: string,provider:string,url_redirect: string) : string{

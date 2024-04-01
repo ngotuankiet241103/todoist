@@ -209,6 +209,7 @@ const DetaiTask = ({ task }: { task: TaskResponse }) => {
                   />
                   <div className="flex justify-end">
                     <ButtonList
+                      isList={true}
                       isAllow={isAllow}
                       clickCancle={() => setEdit(false)}
                       clickSubmit={handleUpdateTask}
@@ -236,6 +237,7 @@ const DetaiTask = ({ task }: { task: TaskResponse }) => {
             </BaseMoreInfo>
             <BaseMoreInfo label="Priority">
               <FormPriority
+               isList={true}
                 onclick={handleChoosePriority}
                 priority={state.priority}
                 isDefault={false}

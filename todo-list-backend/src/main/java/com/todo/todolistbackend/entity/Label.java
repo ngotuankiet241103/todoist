@@ -13,10 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Label{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Label extends BaseEntity{
     @Column
     private String name;
     @Column

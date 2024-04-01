@@ -12,10 +12,8 @@ import net.minidev.json.annotate.JsonIgnore;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Project extends BaseEntity{
+
     @Column
     private String name;
     @Column

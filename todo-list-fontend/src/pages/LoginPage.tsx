@@ -2,7 +2,7 @@ import  { useState } from 'react';
 import OAuth2 from '../components/auth/OAuth2';
 import BaseForm, { FormData } from '../components/form/BaseForm';
 import { Token, methodPost, setToken } from '../helper/api';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import BaseAuthPage from '../components/auth/BaseAuthPage';
 
 
@@ -12,6 +12,7 @@ const LoginPage = () => {
     const url = new URLSearchParams(search);
     const param  = url.get("success_page");
     const enCodeParam = param &&  encodeURIComponent(param);
+    const redirect = useNavigate();
     const handleLogin  = async (value : FormData)   => {
         try {
             setSubmitting(true);
@@ -24,8 +25,12 @@ const LoginPage = () => {
                 const token : Token = response.data;
                 setToken(token)
                 console.log(param);
-                
-                window.location.href = `${param}`
+                if(param){
+                    window.location.href = `${param}`
+                }
+                else{
+                    redirect("/")
+                }
             }
         } catch (error) {
             console.log(error);

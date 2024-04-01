@@ -8,15 +8,17 @@ const SubProjectItem = ({
   tasks,
   code,
   isList,
+  isUpcoming
 }: {
   title?: string;
   tasks: TaskListResponse | [];
   code: string;
   isList: boolean;
+  isUpcoming?: string
 }) => {
   return (
-    <div>
-      <h2 className="font-semibold mb-2">{title}</h2>
+    <div className="w-full">
+      <h2 className="font-semibold mb-2 current-day">{title}</h2>
       <Droppable droppableId={`${code}`}>
         {(provided, snapshot) => (
           <>
@@ -24,7 +26,7 @@ const SubProjectItem = ({
               ref={provided.innerRef}
               style={getListStyle(snapshot.isDraggingOver)}
             >
-              <TaskList isList={isList} tasks={tasks}></TaskList>
+              <TaskList isUpcoming={isUpcoming || ""} isList={isList} tasks={tasks}></TaskList>
               {provided.placeholder}
             </div>
           </>

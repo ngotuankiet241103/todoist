@@ -2,14 +2,21 @@ import axios, { ResponseType } from "axios";
 import { env } from "./env";
 
 
-export default function requestApi<T>(endpoint:string,method:string,body?:T,isRedirect = false,responseType : ResponseType = "json"  ){
+export default function requestApi<T>(endpoint:string,method:string,body?:T,isRedirect = false,responseType : ResponseType = "json",header?: {"Content-type": string}){
     const url = env.VITE_BASE_URL_FONTEND;
     const api : string = env.VITE_BASE_API;
-    const headers = {
+    let headers = {
         "Accept": "application/json",
         "Content-type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
+        
     };
+    if(header) {
+        headers = {
+            ...headers,
+            ...header
+        }
+    }
     const instance = axios.create({headers})
     // check endpoint api 
     if(endpoint !== '/login' && endpoint !== '/register' && !endpoint.includes("/register/confirm") ){
@@ -42,7 +49,7 @@ export default function requestApi<T>(endpoint:string,method:string,body?:T,isRe
                 if( error.response.status === 401){
                     
                     try {
-                        const refeshToken = getCookieValue("refreshToken");
+                        const refeshToken = getCookieValue("refresh_token");
                         
                         const data = {
                             refresh_token: refeshToken
@@ -85,7 +92,9 @@ export type Token = {
 }
 export const setToken = (token : Token) => {
     token.access_token &&  localStorage.setItem("access_token",token.access_token);
+    document.cookie =  `refresh_token=${token.refresh_token};expires;path=/`;
 }
+
 export function getCookieValue(key:string) {
 	// Tách chuỗi cookie thành mảng các cặp key-value
 	const cookies = document.cookie.split(";");

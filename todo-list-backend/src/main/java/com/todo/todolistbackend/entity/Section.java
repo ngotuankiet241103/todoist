@@ -12,10 +12,8 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Section {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Section extends BaseEntity {
+
     @Column
     private String name;
     @Column
