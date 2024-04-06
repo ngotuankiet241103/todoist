@@ -18,6 +18,8 @@ public class Section extends BaseEntity {
     private String name;
     @Column
     private String code;
+    @Column
+    private boolean isDeleted;
     @JsonIgnore
     @ManyToOne
     private Project project;

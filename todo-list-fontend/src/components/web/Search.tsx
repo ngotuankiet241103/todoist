@@ -1,4 +1,3 @@
-import React from 'react';
 import IconMenu from './IconMenu';
 import useTheme from '../../hooks/useTheme';
 import { hoverMode } from '../../utils/theme';

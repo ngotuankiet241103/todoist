@@ -112,7 +112,7 @@ type Calendar = {
 const getDay = (date: Day): string => {
   if (date.mark === "Next week" || date.mark == "") {
     const month: number = date.date?.getMonth() ? date.date?.getMonth() : 1;
-    console.log(month);
+    console.warn(month);
 
     return `${date.day.substring(0, 3)} ${date.date?.getDate()} ${
       months[month]

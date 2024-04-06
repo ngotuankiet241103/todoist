@@ -16,6 +16,7 @@ import com.todo.todolistbackend.util.HandleStrings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,17 +29,19 @@ public class ProjectServiceImpl implements ProjectService {
     private final SectionService sectionService;
     private final ProjectMapping projectMapping;
     private final TaskRepository taskRepository;
+
     @Override
-    public Project save(ProjectRequest projectRequest) {
+    public ProjectDTO save(ProjectRequest projectRequest) {
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByid(userPrincipal.getId());
         Project project = Project
                 .builder()
-                .code(projectRequest.getName())
                 .name(projectRequest.getName())
                 .user(user)
                 .build();
-        return projectRepository.save(project);
+        projectRepository.save(project);
+        project.setCode(HandleStrings.generateCode(projectRequest.getName(),project.getId()));
+        return signleMapping(projectRepository.save(project));
     }
 
     @Override
@@ -106,6 +109,22 @@ public class ProjectServiceImpl implements ProjectService {
         catch (Exception error){
             System.out.println(error);
         }
+        return null;
+    }
+
+    @Override
+    public Object updateProject(ProjectRequest projectRequest) {
+        Project project = projectRepository.findById(projectRequest.getId()).orElseThrow(() -> new BadRequestException("project is not exist"));
+        project.setCode(HandleStrings.generateCode(projectRequest.getName(),projectRequest.getId()));
+        project.setName(projectRequest.getName());
+        return signleMapping(projectRepository.save(project));
+    }
+    @Transactional
+    @Override
+    public Object deleteProject(ProjectRequest projectRequest) {
+        sectionService.deleteByProjectId(projectRequest.getId());
+        taskRepository.deleteByProjectId(projectRequest.getId());
+        projectRepository.deleteById(projectRequest.getId());
         return null;
     }
 

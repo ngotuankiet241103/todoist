@@ -10,7 +10,7 @@ import { Filter } from "../../redux/reducer/stateSlice";
 import { useEffect, useRef, useState } from "react";
 import { TaskSliceKey } from "../../redux/reducer/tasksSlice";
 import useTheme from "../../hooks/useTheme";
-import { bgColor, bgMode, hoverMode, sidebarMode } from "../../utils/theme";
+import { bgColor, bgMode, hoverBox, hoverMode, sidebarMode, textColor } from "../../utils/theme";
 
 type ViewFilter = {
   isShow: boolean;
@@ -52,13 +52,13 @@ const ViewFilter = ({
     return (
       <>
         {arr ? (
-          <div className={`group relative py-2 px-2 ${sidebarMode[theme.mode]()} transition-all rounded-lg cursor-pointer`}>
+          <div className={`group relative py-2 px-2  transition-all rounded-lg cursor-pointer`}>
             <div className="flex justify-between" onClick={handleToggleModel}>
               <span>Group:</span>
               <span>{group}</span>
             </div>
             <div
-              className={`absolute  z-10 box-calen top-10 left-0 bg-white  w-full  cursor-pointer ${
+              className={`absolute  z-10 box-calen top-10 left-0 ${sidebarMode[theme.mode]()} w-full  cursor-pointer ${
                 openGroupOption ? "block" : "hidden"
               }`}
             >
@@ -66,11 +66,11 @@ const ViewFilter = ({
                 <div
                   onClick={() => setGroup(value)}
                   key={index}
-                  className="flex px-4 py-2 rounded-lg justify-between hover:bg-gray-300 transition-all"
+                  className={`flex px-4 py-2 rounded-lg justify-between ${hoverMode[theme.mode]()} transition-all`}
                 >
                   <div>{value}</div>
                   {value === group && (
-                    <span className="text-primary">
+                    <span className={`${textColor[theme.color]}`}>
                       <i className="fa-solid fa-check"></i>
                     </span>
                   )}
@@ -166,7 +166,7 @@ const RenderPriority = ({label,priorities,onClick,filter,setFilter,isShow}: {isS
         <div
           className={`absolute z-20 ${showForm ? 'block' : 'hidden'} box-calen top-10 left-0 ${sidebarMode[theme.mode]()}  w-full  cursor-pointer`}
         >
-          {priorities.length > 0 &&  priorities.map(item => <div onClick={() => handleClick(item.code)}  className={`flex px-4 py-2 rounded-lg justify-between hover:bg-gray-300 transition-all ` } key={item.id}>
+          {priorities.length > 0 &&  priorities.map(item => <div onClick={() => handleClick(item.code)}  className={`flex px-4 py-2 rounded-lg justify-between ${hoverMode[theme.mode]()} transition-all ` } key={item.id}>
             <div>{item.name}</div>
             <div className={`${check(filter,item.code,"priorityCode") ? 'block' : 'hidden'} icon-check text-primary`}><i className="fa-solid fa-check"></i></div>
           </div>)}
@@ -227,7 +227,7 @@ const RenderFilterLabel = ({label,labels,onClick,filter,setFilter,isShow}: {isSh
     }
   }
   return (
-    <div className="group relative py-2 px-2 hover:bg-gray-200 transition-all rounded-lg cursor-pointer ">
+    <div className={`group relative py-2 px-2  ${hoverMode[theme.mode]()} transition-all rounded-lg cursor-pointer `}>
         <div className="flex justify-between" onClick={handleToggleModel}>
           <span className="capitalize">{label}:</span>
           <span>{filter && filter.labelCode && filter.labelCode.length > 0 ? filter.labelCode.map((item,index,arr) => index === arr.length -1 ? item : `${item},`).join('') : "All(Default)" }</span>
@@ -236,9 +236,9 @@ const RenderFilterLabel = ({label,labels,onClick,filter,setFilter,isShow}: {isSh
            className={`absolute z-20 box-calen py-2 top-10 left-0 ${sidebarMode[theme.mode]()}  w-full  cursor-pointer ${showForm ? 'block' : 'hidden'}`}
         >
           <div className="mb-2 px-2">
-            <input ref={inputRef} onChange={handleSearchLabel} className="border border-gray-300 w-full outline-none px-2 py-1 rounded-lg" placeholder="Search your label"/>
+            <input ref={inputRef} onChange={handleSearchLabel} className={`border bg-transparent border-gray-300 w-full outline-none px-2 py-1 rounded-lg`} placeholder="Search your label"/>
           </div>
-          {labelSearch.length > 0 &&  labelSearch.map(item => <div  onClick={() => handleClick(item.code)} className="flex px-4 py-2 rounded-lg justify-between hover:bg-gray-300 transition-all" key={item.id}>
+          {labelSearch.length > 0 &&  labelSearch.map(item => <div  onClick={() => handleClick(item.code)} className={`flex px-4 py-2 rounded-lg justify-between  ${hoverMode[theme.mode]()} transition-all`} key={item.id}>
             <div>{item.name}</div>
             <div className={`${check(filter,item.code,"labelCode") ? 'block' : 'hidden'} icon-check text-primary`}><i className="fa-solid fa-check"></i></div>
           </div>)}

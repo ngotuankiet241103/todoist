@@ -1,6 +1,8 @@
 
 import { searchItem } from './SearchContainer';
 import IconMenu from '../web/IconMenu';
+import { borderColor, hoverColor, hoverMode } from '../../utils/theme';
+import useTheme from '../../hooks/useTheme';
 
 const SearchItem = ({search}: {search: searchItem}) => {
     return (
@@ -16,9 +18,9 @@ type SearchSub =  {
     onclick: () => void;
 }
 const SearchSubItem = ({menu}: {menu: SearchSub}) =>{
- 
+    const {theme} = useTheme();
     return (
-        <div className='p-2 hover:bg-gray-200 border-2 border-transparent hover:border-l-red-500 transition-all flex gap-3 cursor-pointer' onClick={menu.onclick}>
+        <div className={`p-2 ${theme.mode === "dark" ? 'hover:bg-black' : 'hover:bg-gray-200'} border-2 border-transparent hover:border-y-transparent hover:border-r-transparent hover:${borderColor[theme.color]} transition-all flex gap-3 cursor-pointer`} onClick={menu.onclick}>
             <span>
                 <IconMenu icon={menu.icon}></IconMenu>
             </span>

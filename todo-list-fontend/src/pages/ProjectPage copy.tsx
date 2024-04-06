@@ -14,16 +14,34 @@ import useRender from "../hooks/useRender";
 import useChangeView from "../hooks/useChangeView";
 import BaseWeb from "../components/web/BaseWeb";
 import useTasks from "../hooks/useTasks";
-import { useEffect, useRef, useState } from "react";
+import {  useRef } from "react";
 import { updateState } from "../redux/reducer/stateSlice";
 import { bgColor, textColor } from "../utils/theme";
 import useTheme from "../hooks/useTheme";
+import FormTask from "../components/form/FormTask";
+import TaskAdd from "../components/task/TaskAdd";
+import toastMessage from "../helper/toast";
+import { TaskResponse } from "../components/task/TaskItem";
+import { formatDate } from "../utils/formatDate";
+import { ToastContainer } from "react-toastify";
 
-export async function handleUpdateTask<T>(api: string, data: T) {
+export async function handleUpdateTask<T>(api: string, data: T,move?: "section" | "priority" | "expiredAt") {
   try {
     const response = await requestApi(api, "PUT", data);
     if (response.status === 200) {
-      console.log(response);
+      if(move){
+        const task : TaskResponse = response.data;
+        if(move === "expiredAt"){
+          
+          toastMessage("success", `Move task to date ${formatDate(new Date(task[move]))}`);
+         
+        }
+        else{
+          
+          toastMessage("success", `Move task to ${move} ${task[move].name}`);
+        }
+        
+      }
     }
   } catch (error) {
     console.log(error);
@@ -51,7 +69,9 @@ const ProjectPage = () => {
   const { isShow: showModal, task: taskDetail } = detail;
   const { isShow: isAddSection, handleToggleModel: handleToggleSection } =
     useOpenModal(false);
-  const {theme} = useTheme();
+  const { isShow: openFormTask, handleToggleModel: toggleFormTask } =
+    useOpenModal(false);
+  const { theme } = useTheme();
   const onDragStart = (event) => {
     dispatch(updateState({ key: "isDragging", value: true }));
   };
@@ -101,7 +121,7 @@ const ProjectPage = () => {
               sectionCode: desKey,
             };
 
-            handleUpdateTask(`/tasks/project/section`, data);
+            handleUpdateTask(`/tasks/project/section`, data,"section");
           } else if (desKey === projectCode) {
             const data: TaskUpdate = {
               id: Number(result.draggableId),
@@ -116,7 +136,7 @@ const ProjectPage = () => {
           };
           console.log(data);
 
-          handleUpdateTask(`/tasks/priority`, data);
+          handleUpdateTask(`/tasks/priority`, data,"priority");
         }
       } else {
         const index: number = result.source.index;
@@ -165,7 +185,7 @@ const ProjectPage = () => {
     const parent = getParent(e.target, "add-section");
     console.log(parent);
     console.warn(parent);
-    parent.classList.toggle("h-[30px]")
+    parent.classList.toggle("h-[30px]");
     parent.classList.toggle("h-[160px]");
     const form: HTMLDivElement = parent.querySelector(".form-section");
     const sectionItem: HTMLDivElement = parent.querySelector(".title-section");
@@ -183,9 +203,12 @@ const ProjectPage = () => {
           Object.entries(task).map(([key, value], index) => (
             <>
               <div
-                className={`${state.isList ? `box-${key}` : "min-w-[260px]"}`}
+                className={`${
+                  state.isList ? `box-${key}` : `min-w-[260px] max-w-[260px]`
+                }`}
               >
                 <SubProjectItem
+                  isSection={state.group === "default"}
                   isList={state.isList}
                   code={key}
                   key={index}
@@ -198,24 +221,31 @@ const ProjectPage = () => {
                       isAddSection ? "" : "h-[30px]"
                     } overflow-x-hidden`}
                   >
-                    
+                    <div
+                      onClick={handleToggleModal}
+                      className={`relative hidden title-section section-item text-center transition-all ${
+                        textColor[theme.color]
+                      } cursor-pointer`}
+                    >
                       <div
-                        onClick={handleToggleModal}
-                        className={`relative hidden title-section section-item text-center transition-all ${textColor[theme.color]} cursor-pointer`}
-                      > 
-                        <div className={`absolute top-[50%] left-[-60px]  translate-y-[-50%] w-[50%] h-[2px] ${bgColor[theme.color]}`}></div>
-                        Add section
-                        <div className={`absolute top-[50%] right-[-60px]  translate-y-[-50%] w-[50%] h-[2px] ${bgColor[theme.color]}`}></div>
+                        className={`absolute top-[50%] left-[-60px]  translate-y-[-50%] w-[50%] h-[2px] ${
+                          bgColor[theme.color]
+                        }`}
+                      ></div>
+                      Add section
+                      <div
+                        className={`absolute top-[50%] right-[-60px]  translate-y-[-50%] w-[50%] h-[2px] ${
+                          bgColor[theme.color]
+                        }`}
+                      ></div>
+                    </div>
 
-                      </div>
-                    
-                      <div className="hidden form-section">
-                        <AddSection
-                          clickCancle={handleToggleModal}
-                          clickSubmit={handleAddSection}
-                        ></AddSection>
-                      </div>
-                    
+                    <div className="hidden form-section">
+                      <AddSection
+                        clickCancle={handleToggleModal}
+                        clickSubmit={handleAddSection}
+                      ></AddSection>
+                    </div>
                   </div>
                 )}
               </div>
@@ -240,6 +270,20 @@ const ProjectPage = () => {
               onDragEnd={onDragEnd}
             >
               <div className={`${state.isList ? "" : "task-list"}`}>
+                {task &&
+                  Object.keys(task).length < 1 &&
+                  (!openFormTask ? (
+                    <TaskAdd onclick={() => toggleFormTask()} />
+                  ) : (
+                    <div className={state.isList ? "w-full" : "w-[280px]"}>
+                      <FormTask
+                        isList={state.isList}
+                        isFixed={false}
+                        visibile={true}
+                        onclick={toggleFormTask}
+                      ></FormTask>
+                    </div>
+                  ))}
                 <Render></Render>
                 {!state.isList && (
                   <div className="mb-2 flex-1">
@@ -247,7 +291,7 @@ const ProjectPage = () => {
                       {!isAddSection ? (
                         <h2
                           onClick={handleToggleSection}
-                          className="w-full borde border-gray-300 text-gray-400 cursor-pointer hover:text-primary"
+                          className="p-2 w-full borde border-gray-300 text-gray-400 cursor-pointer hover:text-primary"
                         >
                           Add section
                         </h2>
@@ -266,6 +310,7 @@ const ProjectPage = () => {
           {showModal && taskDetail && <DetaiTask task={taskDetail}></DetaiTask>}
         </div>
       </BaseWeb>
+      <ToastContainer/>
     </>
   );
 };

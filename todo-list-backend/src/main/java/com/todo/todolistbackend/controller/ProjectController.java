@@ -29,5 +29,13 @@ public class ProjectController {
     public ResponseEntity<?> addProject(@RequestBody @Valid ProjectRequest projectRequest){
         return ResponseEntity.ok(projectService.save(projectRequest));
     }
+    @PutMapping("/projects")
+    public ResponseEntity<?> updateProject(@RequestBody @Valid ProjectRequest projectRequest){
+        return ResponseEntity.ok(projectService.updateProject(projectRequest));
+    }
+    @DeleteMapping("/projects")
+    public ResponseEntity<?> deleteProject(@RequestBody  ProjectRequest projectRequest){
+        return ResponseEntity.ok(projectService.deleteProject(projectRequest));
+    }
 
 }

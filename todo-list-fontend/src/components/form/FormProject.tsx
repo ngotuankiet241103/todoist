@@ -49,7 +49,7 @@ const FormProject = ({isInbox = true,tag,onclick} : formProject ) => {
                  {tag && showTag(tag)}
             </BoxTitle>
             {isShow && 
-                <div className='absolute w-[200px] py-2 top-[40px] left-0 box-calen bg-white rounded-lg'>
+                <div className='absolute w-[200px] z-10 py-2 top-[40px] left-0 box-calen bg-white rounded-lg'>
                     <div className='menu-hover flex justify-between items-center px-2'>
                         {project.inbox && <ProjectItem onClick={handleClick} project={project.inbox}></ProjectItem>}
                         {isInbox && <IconMenu className='text-primary text-[14px]' icon='fa-solid fa-check'></IconMenu>}

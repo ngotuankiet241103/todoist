@@ -17,9 +17,11 @@ const SettingPage = () => {
     }
     return (
         <div onClick={handleCloseSetting} className='fixed  inset-0 flex justify-center py-4 bg-[rgba(0,0,0,0.25)]'>
-            <div onClick={(e) => e.stopPropagation()} className={`w-[1000px] ${bgMode[theme.mode]() === "bg-black" ? 'bg-[rgb(30,30,30)]' : 'bg-white' } rounded-lg overflow-hidden flex`}>
+            <div onClick={(e) => e.stopPropagation()} className={`w-[1000px] ${bgMode[theme.mode]() === "bg-[#1E1E1E]   " ? 'bg-[rgb(30,30,30)]' : 'bg-white' } rounded-lg overflow-hidden flex`}>
                 <SidebarSetting></SidebarSetting>
-                <Outlet></Outlet>
+                <div className={`${bgMode[theme.mode]()} w-full p-4`}>
+                    <Outlet></Outlet>
+                </div>
             </div>
         </div>
     );

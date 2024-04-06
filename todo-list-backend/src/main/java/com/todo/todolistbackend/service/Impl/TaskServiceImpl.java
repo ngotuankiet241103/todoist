@@ -61,6 +61,7 @@ public class TaskServiceImpl implements TaskService {
                 .user(user)
                 .priority(priority)
                 .isCompleted(false)
+                .isDeleted(false)
                 .expiredAt(taskRequest.getExpiredAt() != null ? formatDate(taskRequest.getExpiredAt(),23,59,59) : null)
                 .build();
         return task;

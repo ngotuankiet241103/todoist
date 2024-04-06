@@ -13,6 +13,8 @@ import { bgColorPriority, colorPriority } from "../../constaints/flag";
 import { updateMethod } from "../../helper/api";
 import useOpenModal from "../../hooks/useOpenModal";
 import Hello from "./Hello";
+import { sidebarMode } from "../../utils/theme";
+import useTheme from "../../hooks/useTheme";
 const FormTask = lazy(() => import('../form/FormTask'))
 
 
@@ -37,6 +39,7 @@ const TaskItem = ({ task, isList, innerref, style, ...props }: TaskItem) => {
   const { isShow, handleToggleModel } = useOpenModal(false);
   const dispatch = useDispatch();
   const [isHover, setHover] = useState(false);
+  const {theme} = useTheme();
   useEffect(() => {
     if(checkBoxRef.current){
       const element = checkBoxRef.current;
@@ -91,7 +94,7 @@ const TaskItem = ({ task, isList, innerref, style, ...props }: TaskItem) => {
           style={style}
           onClick={() => handleClickTask(task)}
           {...props}
-          className={`flex gap-2 justify-start task-item cursor-pointer py-2 mb-2 border ${isList ? ' border-transparent border-b-gray-300' : 'border-gray-300 rounded-lg px-2'}`}
+          className={`flex gap-2 ${!isList ?  sidebarMode[theme.mode]() : ''} justify-start task-item cursor-pointer py-2 mb-2 border ${isList ? ' border-transparent border-b-gray-300' : 'border-gray-300 rounded-lg px-2'}`}
         >
           <div className="py-2">
             <div
@@ -137,8 +140,6 @@ const TaskItem = ({ task, isList, innerref, style, ...props }: TaskItem) => {
       ) : (
        
         <>
-        
-          <Hello task={task}></Hello>
           <div>
             <Suspense fallback={<div>loading</div>}>
 

@@ -108,7 +108,7 @@ const SettingAccountPage = () => {
           <span className="block font-semibold">Plan</span>
           <span className="block font-semibold">Beginer</span>
         </div>
-        <ButtonSetting onClick={() => console.log("123")}>
+        <ButtonSetting >
           <NavLink to={"/app/settings/subcription"}>Manage plan</NavLink>
         </ButtonSetting>
       </div>
@@ -123,7 +123,7 @@ const SettingAccountPage = () => {
           </div>
           <div>
             <div className="flex mb-2 gap-2">
-              <ButtonSetting onClick={null}>
+              <ButtonSetting>
                 <label htmlFor="image">Change Photo</label>
               </ButtonSetting>
               {image && (
@@ -151,7 +151,7 @@ const SettingAccountPage = () => {
           ref={inputNameRef}
           onFocus={() => setEdit(true)}
           onBlur={handleBlueEdit}
-          className="px-2 py-1 rounded-lg border border-gray-300 outline-none focus:border-gray-400"
+          className="px-2 bg-transparent py-1 rounded-lg border border-gray-300 outline-none focus:border-gray-400"
           defaultValue={user?.name}
         />
       </CompoSettingPage>

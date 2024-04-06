@@ -41,6 +41,7 @@ public class LabelServiceImpl implements LabelService {
         Label label = Label.builder()
                 .name(labelRequest.getName())
                 .user(user)
+                .isDeleted(false)
                 .build();
         labelRepository.save(label);
         label.setCode(HandleStrings.generateCode(labelRequest.getName(),label.getId()));
@@ -92,11 +93,7 @@ public class LabelServiceImpl implements LabelService {
     @Override
     @Transactional
     public Object deleteById(long id) {
-        List<Long> tasks =taskRepository.findByLabelId(id);
-        if(tasks.size() > 0){
-            tasks.stream().forEach(task -> taskRepository.deleteById(task));
-        }
-
+         taskRepository.deleteByLabelId(id);
         labelRepository.deleteById(id);
         Map<String,Object> response = new HashMap<>();
         response.put("status", HttpStatus.OK);

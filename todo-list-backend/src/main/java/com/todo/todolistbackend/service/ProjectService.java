@@ -8,7 +8,7 @@ import com.todo.todolistbackend.request.ProjectRequest;
 import java.util.List;
 
 public interface ProjectService {
-    Project save(ProjectRequest projectRequest);
+    ProjectDTO save(ProjectRequest projectRequest);
 
     void createProject(User user);
 
@@ -21,4 +21,8 @@ public interface ProjectService {
     void createInbox(User user);
 
     Object findProjectInbox();
+
+    Object updateProject(ProjectRequest projectRequest);
+
+    Object deleteProject(ProjectRequest projectRequest);
 }

@@ -50,6 +50,7 @@ const useTasks = (
       : "";
   };
   useEffect(() => {
+    
     const handleUpdateTask = (taskO: Task) => {
       const data: ProjectCommon = taskO.getTask(group);
       setTitle(taskO.getTitle(group));

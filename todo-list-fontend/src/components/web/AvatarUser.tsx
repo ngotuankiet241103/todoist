@@ -3,7 +3,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Info } from '../../redux/reducer/userSlice';
 import axios from 'axios';
 import { env } from '../../helper/env';
-import { hoverMode } from '../../utils/theme';
+import { hoverBox} from '../../utils/theme';
 import useTheme from '../../hooks/useTheme';
 const removeDiacritics = (value: string) => {
     const arr = value.split(" ");
@@ -64,7 +64,7 @@ const AvatarUser = ({info: {name,avatar} ,onClick}: &{info: Info , onClick: () =
         }
     },[avatar,imageRef])
     return (
-        <div className={`flex gap-2 items-center ${theme.mode != "light" ? 'hover:bg-black' : "hover:bg-gray-200"} p-2 cursor-pointer transition-all rounded-lg`} onClick={onClick}>
+        <div className={`flex gap-2 items-center ${hoverBox[theme.mode]()} p-2 cursor-pointer transition-all rounded-lg`} onClick={onClick}>
              <img ref={imageRef} src={avatar} className='w-[32px] h-[32px] rounded-full'/>
             <h4>{name}</h4>
         </div>

@@ -17,6 +17,7 @@ export default {
         "second": "rgb(252,250,248)",
         "secondary": "rgb(74,84,98)",
         "sidebarDark": "rgb(38,38,38)",
+        "dark": "#1E1E1E",
         "thirdary": "rgb(214,132,0)",
         "fill": "rgb(255,239,229)"
       }

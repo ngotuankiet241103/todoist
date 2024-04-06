@@ -14,6 +14,8 @@ import useOpenModal from "../../hooks/useOpenModal";
 import SettingPage from "../../pages/SettingPage";
 import useTheme from "../../hooks/useTheme";
 import { bgMode, textMode } from "../../utils/theme";
+import useOpenBoxSearch from "../../hooks/useOpenBoxSearch";
+import { ToastContainer } from "react-toastify";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const Header = () => {
   const isRender = useSelector((state: state) => state.status.isRender);
   const {isShow,handleToggleModel} = useOpenModal(false);
   const {theme} = useTheme();
+  
   useEffect(() => {
     dispatch(userThunk());
     dispatch(labelThunk());
@@ -35,7 +38,7 @@ const Header = () => {
   return (
     <>
       <div className={`md:flex ${bgMode[theme.mode]()} ${textMode[theme.mode]()}`}>
-        <div className="max-sm:hidden">
+        <div className="max-sm:hidden" >
           {!isExpand && <SideBarHeader></SideBarHeader>}
         </div>
         <div className="max-sm:hidden">
@@ -58,7 +61,7 @@ const Header = () => {
 
         <Outlet></Outlet>
       </div>
-      
+      <ToastContainer/>
     </>
   );
 };

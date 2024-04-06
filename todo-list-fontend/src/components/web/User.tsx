@@ -6,7 +6,7 @@ import useExpandMenu from '../../hooks/useExpandMenu';
 import useOpenModal from '../../hooks/useOpenModal';
 import { deleteToken, getCookieValue, postMethod } from '../../helper/api';
 import {  NavLink, useNavigate } from 'react-router-dom';
-import { bgMode, hoverColor, hoverMode } from '../../utils/theme';
+import { bgMode, hoverBox, hoverColor, hoverMenu, hoverMode } from '../../utils/theme';
 import useTheme from '../../hooks/useTheme';
 
 const User = () => {
@@ -47,8 +47,8 @@ const User = () => {
                     <span onClick={handleExpandMenu}><i className="fa-solid fa-table-columns"></i></span>
                 </div>
                 <div className={`${isShow ? 'block' : 'hidden'} overflow-hidden z-20 absolute top-[100%] left-0 w-[200px] rounded-lg ${bgMode[theme.mode]()} box-calen`}>
-                    <NavLink to={"/app/settings"} ><div className={`px-3 py-2 ${theme.mode != "light" ? hoverColor[theme.color]() : "hover:bg-gray-200"} cursor-pointer`} onClick={handleOpenSettings} >Settings</div></NavLink>
-                    <div className={`cursor-pointer px-3 py-2  ${theme.mode != "light" ? hoverColor[theme.color]() : "hover:bg-gray-200"}`} onClick={handleLogout}>Logout</div>
+                    <NavLink to={"/app/settings"} ><div className={`px-3 py-2 ${hoverMenu[theme.mode](theme.color)} cursor-pointer`} onClick={handleOpenSettings} >Settings</div></NavLink>
+                    <div className={`cursor-pointer px-3 py-2  ${hoverMenu[theme.mode](theme.color)}`} onClick={handleLogout}>Logout</div>
                 </div>
             </div>
             

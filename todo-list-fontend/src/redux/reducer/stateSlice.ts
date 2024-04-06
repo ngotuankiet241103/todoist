@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import storage, { expand_key } from "../../helper/storage";
-import { ProjectGroupKey } from "../../hooks/useTasks";
+import { ProjectGroupKey, ProjectGroupKeyEx } from "../../hooks/useTasks";
 
 export const key = "isRender";
 export const isList ="isList";
@@ -15,12 +15,17 @@ export type stateApp = {
     isExpand: boolean
     isRender: boolean,
     isDragging: boolean,
+    projectAdd: {
+        index?: number,
+        isAddProject: boolean,
+        
+    },
     theme: theme
     [key: string]: {
         isList: boolean
-        group: ProjectGroupKey
+        group: ProjectGroupKeyEx
         filter: Filter
-    } | boolean | {[key: string]: string}
+    } | boolean | {[key: string]: string | number | boolean}
 }
 type storageState = {
     [key: string]: boolean
@@ -30,6 +35,10 @@ const initialValue : stateApp= {
     isExpand: storage.get(expand_key),
     isRender: storage.get(key) || false,
     isDragging: false,
+    projectAdd: {
+        isAddProject: false,
+       
+    },
     theme: storage.get<theme>("theme") || {
         mode: "light",
         color: "todoist"

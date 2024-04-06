@@ -2,7 +2,6 @@ import { formatDate } from "../utils/formatDate";
 import { useDispatch, useSelector } from "react-redux";
 import { state } from "../redux/store";
 import { DragDropContext } from "react-beautiful-dnd";
-import { setTasks } from "../redux/reducer/taskSlice";
 import { reorder } from "../utils/dragContext";
 import DetaiTask from "../components/task/DetaiTask";
 import useOpenModal from "../hooks/useOpenModal";
@@ -12,6 +11,7 @@ import SubProjectItem from "../components/project/SubProjectItem copy";
 import useTasks from "../hooks/useTasks";
 import TaskAdd from "../components/task/TaskAdd";
 import FormTask from "../components/form/FormTask";
+import { updateTask } from "../redux/reducer/tasksSlice";
 
 // using some little inline style helpers to make the app look okay
 const key = "isToday";
@@ -39,17 +39,24 @@ const HomePage = () => {
       }
       const key = result.source.droppableId;
       const desKey = result.destination.droppableId;
+      
       if (key !== desKey) {
         return;
       } else {
+        
         const item = reorder(
-          task[`${today}`],
+          task[key],
           result.source.index,
           result.destination.index
         );
         console.warn(item);
         
-        dispatch(setTasks({ key: today, data: item }));
+        dispatch(
+          updateTask({
+            type: "today",
+            value: { [key]: item },
+          })
+        );
   
         //   setItems({
         //     ...items,
@@ -75,9 +82,10 @@ const HomePage = () => {
           Object.entries(task).map(([key, value], index) => (
             <>
               <div
-                className={`${state.isList ? `box-${key}` : "min-w-[260px]"}`}
+                className={`${state.isList ? `box-${key}` : `min-w-[260px] max-w-[260px]`}`}
               >
                 <SubProjectItem
+                  isSection={false}
                   isList={state.isList}
                   code={key}
                   key={index}
@@ -111,7 +119,7 @@ const HomePage = () => {
           </DragDropContext>
 
           {showModal && taskDetail && <DetaiTask task={taskDetail}></DetaiTask>}
-          {!task
+          {task && Object.keys(task).length < 1 
             && (!openFormTask ? <TaskAdd onclick={() => toggleFormTask()}/>
             :
             (

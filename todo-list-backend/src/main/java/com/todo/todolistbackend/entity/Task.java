@@ -22,7 +22,7 @@ public class Task extends BaseEntity implements Serializable {
     private String description;
     @Column
     private String code;
-    @Column(name = "expired_at")
+    @Column
     private Date expiredAt;
     @Column
     private boolean isCompleted;
@@ -37,4 +37,7 @@ public class Task extends BaseEntity implements Serializable {
     private Project project;
     @ManyToOne
     private Section section;
+    @Column
+    private boolean isDeleted;
+
 }

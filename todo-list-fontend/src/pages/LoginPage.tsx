@@ -4,6 +4,8 @@ import BaseForm, { FormData } from '../components/form/BaseForm';
 import { Token, methodPost, setToken } from '../helper/api';
 import { NavLink, useNavigate } from 'react-router-dom';
 import BaseAuthPage from '../components/auth/BaseAuthPage';
+import { ToastContainer, toast } from 'react-toastify';
+import toastMessage from '../helper/toast';
 
 
 const LoginPage = () => {
@@ -13,6 +15,7 @@ const LoginPage = () => {
     const param  = url.get("success_page");
     const enCodeParam = param &&  encodeURIComponent(param);
     const redirect = useNavigate();
+    
     const handleLogin  = async (value : FormData)   => {
         try {
             setSubmitting(true);
@@ -25,12 +28,8 @@ const LoginPage = () => {
                 const token : Token = response.data;
                 setToken(token)
                 console.log(param);
-                if(param){
-                    window.location.href = `${param}`
-                }
-                else{
-                    redirect("/")
-                }
+                toastMessage("success","Login success",handleToastClose,500,"top-right");
+                
             }
         } catch (error) {
             console.log(error);
@@ -43,8 +42,16 @@ const LoginPage = () => {
         
     }
         
-    
+    const handleToastClose = () => {
+        if(param){
+            window.location.href = `${param}`
+        }
+        else{
+            redirect("/")
+        }
+    }
     return (
+        <>
         <BaseAuthPage>
             <div className='mb-10'>
                 <h1 className='text-[28px] font-bold mb-10'>Log in</h1>
@@ -58,6 +65,8 @@ const LoginPage = () => {
                 <NavLink to={`/auth/register?success_page=${enCodeParam}`} className="underline" >Sign up</NavLink>
             </div>
         </BaseAuthPage>
+        <ToastContainer/>
+        </>
     );
 };
 

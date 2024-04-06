@@ -24,7 +24,7 @@ const SearchContainer = () => {
     const {handleToggleModal} = useAddTask();
     const searchRef = useRef<HTMLInputElement>(null);
     const {handleChooseSearch} = useOpenSearch();
-    const {closeBox} = useOpenBoxSearch();
+    const {isOpen,closeBox} = useOpenBoxSearch();
   
     const handleClickOpen = (type: "projects" | "labels" | "sections") => {
      
@@ -259,6 +259,8 @@ const SearchContainer = () => {
                     icon: `fa-solid fa-house`,
                     item: "Account",
                     onclick: () => {
+                        closeBox();
+                        redirect("/app/settings/account");
                     }
                    
                 },
@@ -266,6 +268,8 @@ const SearchContainer = () => {
                     icon: `fa-solid fa-house`,
                     item: "Change email address",
                     onclick: () => {
+                        closeBox();
+                        redirect("/app/settings/account/email");
                     }
                    
                 },
@@ -273,6 +277,8 @@ const SearchContainer = () => {
                     icon: `fa-solid fa-house`,
                     item: "Change password",
                     onclick: () => {
+                        closeBox();
+                        redirect("/app/settings/account/password");
                     }
                    
                 },
@@ -280,14 +286,21 @@ const SearchContainer = () => {
                     icon: `fa-solid fa-house`,
                     item: "Delete account",
                     onclick: () => {
+                        closeBox();
+                        redirect("/app/settings/account");
                     }
                    
                 }
             ]
         }
     ]
+    const handleBlurBox = () => {
+        if(isOpen){
+            closeBox();
+        }
+    }
     return (
-        <div className="fixed z-20 inset-0 flex justify-center items-center">
+        <div className="fixed z-20 inset-0  bg-[rgba(0,0,0,0.25)] flex justify-center items-center" onClick={handleBlurBox}>
         
             <SearchBox inputRef={searchRef} list={initSearchValue}></SearchBox>
         </div>

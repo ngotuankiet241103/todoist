@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("${api.prefix}")
@@ -22,6 +21,10 @@ public class TaskController {
                                              @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,
                                              @RequestParam(name = "labelCode",defaultValue = "") List<String> labelCode
                                              ){
+        Collections.s
+                List<Integer> arr = new ArrayList();
+            arr.sort((o1, o2) -> o1 - o2);
+            arr.add
         return ResponseEntity.ok(taskService.findTaskUpcoming(from,to,priorityCode,labelCode));
     }
     @GetMapping("/tasks/label/{label-code}")

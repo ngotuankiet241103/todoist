@@ -32,7 +32,7 @@
         
        @apply flex gap-4;
         > div{
-            @apply min-w-[260px];
+            @apply min-w-[260px] max-w-[260px];
         }
     }
     .modal-label:hover{

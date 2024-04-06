@@ -18,7 +18,10 @@ public class Label extends BaseEntity{
     private String name;
     @Column
     private String code;
+    @Column
+    private boolean isDeleted;
     @JsonIgnore
     @ManyToOne
     private User user;
+
 }

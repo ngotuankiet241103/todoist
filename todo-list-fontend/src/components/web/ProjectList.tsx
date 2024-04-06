@@ -6,13 +6,11 @@ const ProjectList = ({ projects }: { projects: ProjectInfo[] }) => {
     <>
       <div className="">
         {projects.length > 0 &&
-          projects.map((project) => (
+          projects.map((project,index) => (
             <ProjectItem
+              index={index}
               key={project.id}
-              id={project.id}
-              name={project.name}
-              code={project.code}
-              task_all={project.task_all}
+              project={project}
             ></ProjectItem>
           ))}
       </div>

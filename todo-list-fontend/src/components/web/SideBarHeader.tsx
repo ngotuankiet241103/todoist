@@ -11,8 +11,10 @@ import MyProject from './MyProject';
 import SearchContainer from '../search/SearchContainer';
 import useAddTask from '../../hooks/useAddTask';
 import useOpenBoxSearch from '../../hooks/useOpenBoxSearch';
-import { bgColor, sidebarMode, textColor } from '../../utils/theme';
+import { bgColor, hoverMode, sidebarMode, textColor } from '../../utils/theme';
 import useTheme from '../../hooks/useTheme';
+import useCreateProject from '../../hooks/useCreateProject';
+import ProjectAdd from './ProjectAdd';
 
 export type MenuItem = {
     path: string,
@@ -27,6 +29,7 @@ const SideBarHeader = ({onClick}: {onClick?: () => void}) => {
     const inbox = useSelector((state: state) => state.project.inbox);
     const {isOpen,closeBox}  = useOpenBoxSearch();
     const {theme} = useTheme();
+    const {project,toggleProject} = useCreateProject();
     menu = [
         {
             path: `/app/project/${ inbox ?inbox.code : ""}`,
@@ -64,7 +67,7 @@ const SideBarHeader = ({onClick}: {onClick?: () => void}) => {
             <div className='mb-4'>
                     <User></User>
             </div>
-            <div className='mb-2 flex gap-2 px-2 menu-hover py-2'>
+            <div className={`mb-2 flex gap-2 px-2  hover:bg-gray-100 transition-all py-2`}>
                     <span className={`w-[22px] h-[22px] flex justify-center items-center ${bgColor[theme.color]}  text-white rounded-full`} >
                         <i className="fa-solid fa-plus"></i>
                     </span>
@@ -79,6 +82,7 @@ const SideBarHeader = ({onClick}: {onClick?: () => void}) => {
        </div>
         <FormTask isList={true} onclick = {() => showModel()} visibile={isShow} isFixed={true}></FormTask>
         {isOpen && <SearchContainer></SearchContainer>}
+        {project.isAddProject && <ProjectAdd  index={project.index} clickCancle={toggleProject}/>}
        </>
     );
 };

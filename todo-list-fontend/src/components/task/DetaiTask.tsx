@@ -19,6 +19,7 @@ import useTask, { Data } from "../../hooks/useTask";
 import useOpenModal from "../../hooks/useOpenModal";
 import LabelTaskList from "./LabelTaskList";
 import { Label } from "../../redux/reducer/labelSlice";
+import { updateState } from "../../redux/reducer/stateSlice";
 
 
 const DetaiTask = ({ task }: { task: TaskResponse }) => {
@@ -47,11 +48,21 @@ const DetaiTask = ({ task }: { task: TaskResponse }) => {
   const [isToday, setToday] = useState(state.date?.mark === "Today");
   const [labelSelect, setSelected] = useState(task.labels);
   const {isShow,handleToggleModel} = useOpenModal(false);
-  console.log(labelSelect);
-  
+  const isRender = useSelector((state : state) => state.status.isRender);
   const dispatchRedux = useDispatch();
-  const handleCloseTask = () => {
+  const handleCloseTask = async () => {
     history.back();
+    console.warn(labelSelect);
+    
+    if(labelSelect.length < 1){
+      const data : {[key:string]: number|string[]} = {
+        id: currentTask.id,
+        labelCodes: []
+      }
+      await updateTask("/tasks/label",data)
+    }
+    
+    dispatchRedux(updateState({key: 'isRender',value: !isRender}))
     dispatchRedux(resetDetailTask());
   };
   const handleMoveProject = () => {
@@ -65,6 +76,8 @@ const DetaiTask = ({ task }: { task: TaskResponse }) => {
   async function updateTask<T>(url: string,data:T){
     try {
       const response = await updateMethod(url,data);
+      console.warn(response);
+      
       if (response &&  response.status === 200) {
         setTask(response.data);
       }

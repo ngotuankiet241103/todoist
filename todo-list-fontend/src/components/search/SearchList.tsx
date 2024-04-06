@@ -112,6 +112,15 @@ const SearchList = ({list,inputRef}: {list: searchItem[],inputRef: RefObject<HTM
                 const arr = labels.filter(label => label.name.includes(data));
                 handleChooseSearch({type: "labels",data: arr})
             }
+            else{
+                let response : searchItem[] = []
+                response = list.reduce((prev, data)=> {
+                    const menu =  data.menu.filter(menu => menu.item.toLowerCase().includes(value))
+                    return  menu.length > 0 ? [...prev,{title: data.title,menu}] : [...prev];
+                },response)
+                setList(response)
+                
+            }
             
            
         }
@@ -121,7 +130,7 @@ const SearchList = ({list,inputRef}: {list: searchItem[],inputRef: RefObject<HTM
         <>
             <div className='flex gap-2 items-center py-3 px-2'>
                 <i className="fa-solid fa-magnifying-glass"></i>
-                <input onChange={handleOnChange} ref={inputRef} type='text' className='px-2 flex-1 outline-none border-none' placeholder='Search or type a command..'/>
+                <input onChange={handleOnChange} ref={inputRef} type='text' className=' bg-transparent px-2 flex-1 outline-none border-none' placeholder='Search or type a command..'/>
             </div>
             {newList.length > 0  && newList.map(menu => <SearchItem   search={menu} ></SearchItem>)}
             

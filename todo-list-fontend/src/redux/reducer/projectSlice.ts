@@ -10,6 +10,7 @@ export type Project = {
     all: ProjectInfo[]
     inbox: ProjectInfo | undefined,
     myProject: ProjectInfo[]
+    detail?: ProjectInfo
 }
 const initialValue : Project = {
     all: [],
@@ -43,12 +44,19 @@ const projectSlice = createSlice(
                     all: [...state.all,...actions.payload]
                 }
                 return state;
+            },
+            setProjectDetail: (state,actions) => {
+              
+                state = {
+                    ...state,
+                    detail: actions.payload
+                }
+                return state;
             }
-            
 
         }
 
     }
 )
-export const {setProject,setInboxProject,setAllProject} = projectSlice.actions;
+export const {setProject,setInboxProject,setAllProject,setProjectDetail} = projectSlice.actions;
 export default projectSlice.reducer;

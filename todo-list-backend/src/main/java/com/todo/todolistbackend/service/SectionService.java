@@ -13,9 +13,15 @@ public interface SectionService {
 
     Section save(SectionRequest sectionRequest, String projectCode);
 
-
-
     Object findByProjectCode(String projectCode);
 
     Section findSectionByCode(String sectionCode);
+
+    void deleteByProjectId(long id);
+
+    Object deleteById(SectionRequest sectionRequest);
+
+    Object updateSection(SectionRequest sectionRequest);
+
+    Object findBySectionCode(String sectionCode);
 }

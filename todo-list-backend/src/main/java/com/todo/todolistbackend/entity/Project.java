@@ -13,11 +13,12 @@ import net.minidev.json.annotate.JsonIgnore;
 @Builder
 @NoArgsConstructor
 public class Project extends BaseEntity{
-
     @Column
     private String name;
     @Column
     private String code;
+    @Column
+    private boolean isDeleted;
     @JsonIgnore
     @ManyToOne
     private User user;

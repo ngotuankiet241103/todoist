@@ -1,14 +1,16 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import useTheme from "../../hooks/useTheme";
-import { bgColor, color, textColor } from "../../utils/theme";
+import { bgColor,  textColor } from "../../utils/theme";
+import { state } from "../../redux/store";
+import { useSelector } from "react-redux";
 
 
 const TaskAdd = ({className,onclick}: {className?: string,onclick: () => void}) => {
+    console.warn("show");
+    
     const  {theme}= useTheme();
+    const isDragging = useSelector((state: state) => state.status.isDragging);
     const buttonAddTask = useRef<HTMLDivElement>(null);
-    useLayoutEffect(() => {
-        
-    },[])
     const getElement = () => {
         if(buttonAddTask.current){
 
@@ -25,6 +27,9 @@ const TaskAdd = ({className,onclick}: {className?: string,onclick: () => void}) 
         return null;
     }
     const handleHoverButton = () => {
+        if(isDragging){
+            return;
+        }
         const elements = getElement();
         if(elements){
             const {element,iconTaskButton,contentTaskButton} = elements;
@@ -35,6 +40,9 @@ const TaskAdd = ({className,onclick}: {className?: string,onclick: () => void}) 
         }
     }
     const handleHoverOutButton = () => {
+        if(isDragging){
+            return;
+        }
         const elements = getElement();
         if(elements){
             const {element,iconTaskButton,contentTaskButton} = elements;
@@ -47,7 +55,7 @@ const TaskAdd = ({className,onclick}: {className?: string,onclick: () => void}) 
     }
     return (
         <div>
-            <div ref={buttonAddTask} className='mb-2 flex gap-2 px-2 task-button py-2 cursor-pointer' onMouseLeave={handleHoverOutButton} onMouseEnter={handleHoverButton} onClick={onclick}>
+            <div ref={buttonAddTask} className='mb-2 flex gap-2 px-2 task-button py-2 cursor-pointer' onMouseLeave={ handleHoverOutButton} onMouseEnter={handleHoverButton } onClick={onclick}>
                 <span className={`w-[22px] h-[22px] flex justify-center items-center icon-task-button  ${textColor[theme.color]} rounded-full ${className}`} >
                     <i className="fa-solid fa-plus"></i>
                 </span>

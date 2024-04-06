@@ -9,7 +9,7 @@ const MenuItemC = ({path,item,icon}: MenuItem) => {
     const property  = "p-2 text-[16px] flex gap-4 items-center";
     const {theme} = useTheme();
     return (
-        <div className={`${hoverMode[theme.mode]()}`}>
+        <div className={`${hoverMode[theme.mode]()} rounded-md overflow-hidden`}>
             <NavLink to={path} className={({isActive}) => isActive ? `bg-fill ${property} ${textColor[theme.color]} ` :  `${property}`}>
                 <IconMenu icon={icon}></IconMenu>
                 <span>{item}</span>
