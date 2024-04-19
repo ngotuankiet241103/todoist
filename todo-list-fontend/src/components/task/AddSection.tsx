@@ -3,7 +3,7 @@ import ButtonForm from "../button/ButtonForm";
 import { SectionItem } from "../form/FormProject";
 type AddSection = {
   section?: SectionItem
-  clickCancle: (e?: React.MouseEvent<HTMLElement,MouseEvent>) => void;
+  clickCancle: (e?: React.MouseEvent<HTMLDivElement,MouseEvent>) => void;
   clickSubmit: (value: string) => void;
 };
 

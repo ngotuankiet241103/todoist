@@ -5,7 +5,7 @@ import useTasks from "../hooks/useTasks";
 import SubProjectItem from "../components/project/SubProjectItem copy";
 import { useSelector } from "react-redux";
 import BaseWeb from "../components/web/BaseWeb";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import DetaiTask from "../components/task/DetaiTask";
 import {
   formatDate,
@@ -17,14 +17,16 @@ import { handleUpdateTask } from "./ProjectPage copy";
 import useTheme from "../hooks/useTheme";
 import { textColor } from "../utils/theme";
 import { ToastContainer } from "react-toastify";
+import { TaskResponse } from "../components/task/TaskItem";
+
 const UpcomingTaskPage = () => {
   const key = "upcoming";
-  const { state } = useChangeView(key);
+  const { state,getGroup,getFilter,getState } = useChangeView(key);
   const detail = useSelector((state: state) => state.detail);
   const { task, titles, upcoming, setUpcoming } = useTasks(
     key,
-    state.group,
-    state.filter
+    getGroup(),
+    getFilter()
   );
   const box = useRef<HTMLDivElement>(null);
   const { isShow: showModal, task: taskDetail } = detail;
@@ -36,7 +38,7 @@ const UpcomingTaskPage = () => {
   useEffect(() => {
     if (box.current) {
       const element = box.current;
-      if (!state.isList) {
+      if (!getState()) {
         element.style.width = `${
           100 * (newTitles ? newTitles.length / 6 : 0)
         }%`;
@@ -45,10 +47,13 @@ const UpcomingTaskPage = () => {
         element.style.marginLeft = `0px`;
       }
     }
-  }, [newTitles]);
+  }, [newTitles,getState]);
   useEffect(() => {
     setNewTask(undefined);
     setNewTitles([]);
+    const newDate = new Date();
+    newDate.setDate(newDate.getDate() + 18)
+    setUpcoming({ from: "", to: formatDate(newDate) });
   }, [state.filter]);
   useEffect(() => {
     if (titles) {
@@ -89,12 +94,12 @@ const UpcomingTaskPage = () => {
           Object.entries(newTask).map(([key, value], index) => (
             <>
               <div
-                className={`${state.isList ? `box-${key}` : "min-w-[260px]"}`}
+                className={`${getState() ? `box-${key}` : "min-w-[260px]"}`}
               >
                 <SubProjectItem
                   isUpcoming={key}
                   isSection={false}
-                  isList={state.isList}
+                  isList={getState()}
                   code={key}
                   key={index}
                   title={newTitles && newTitles[index]}
@@ -131,7 +136,7 @@ const UpcomingTaskPage = () => {
     );
   };
   const onDragStart = () => {};
-  const onDragEnd = (result) => {
+  const onDragEnd = (result : DropResult) => {
     if (!result.destination) {
       return;
     }
@@ -145,7 +150,13 @@ const UpcomingTaskPage = () => {
         if (desKey != "over date") {
           const [newItem] = arr.splice(index, 1);
           arr.slice(index, 1);
-          const newArr = [...newTask[desKey], newItem];
+          const newDateItem : TaskResponse = {
+            ...newItem,
+            expiredAt: new Date(desKey),
+          }
+         
+          const newArr = [...newTask[desKey], newDateItem];
+
           const item = reorder(newArr, newArr.length - 1, desIndex);
           setNewTask({ ...newTask, [key]: arr, [desKey]: item });
           const data = {
@@ -162,23 +173,22 @@ const UpcomingTaskPage = () => {
       }
     }
   };
-  function handleSrcoll<T>(e: T) {
-    const element: HTMLElement = e?.target;
-    const x = element.offsetLeft;
-    const y = element.offsetTop;
-    const boxElement = document.elementFromPoint(x, y);
-    if (boxElement && boxElement.classList.contains("current-day")) {
-      const text = boxElement.textContent;
-      const index = newTitles.findIndex((title) => title === text);
-      setIndex(index);
-      console.warn(index);
-      console.warn(newTitles.length);
-      console.warn(newTitles);
-
-      if (index >= newTitles.length / 2) {
-        const newDate = new Date(upcoming.to);
-        newDate.setDate(newDate.getDate() + 18);
-        setUpcoming({ from: upcoming.to, to: formatDate(newDate) });
+  function handleSrcoll() {
+    
+    if(box.current){
+      const element: HTMLElement = box.current;
+      const x = element.offsetLeft;
+      const y = element.offsetTop;
+      const boxElement = document.elementFromPoint(x, y);
+      if (boxElement && boxElement.classList.contains("current-day")) {
+        const text = boxElement.textContent;
+        const index = newTitles.findIndex((title) => title === text);
+        setIndex(index);
+        if (index >= newTitles.length / 2) {
+          const newDate = new Date(upcoming.to);
+          newDate.setDate(newDate.getDate() + 18);
+          setUpcoming({ from: upcoming.to, to: formatDate(newDate) });
+        }
       }
     }
   }
@@ -188,7 +198,7 @@ const UpcomingTaskPage = () => {
         <div>
           <div
             className={` h-[100vh] ${
-              !state.isList ? "w-[1200px] overflow-x-hidden" : "w-[800px]"
+              !getState() ? "w-[1200px] overflow-x-hidden" : "w-[800px]"
             }  mx-auto py-4 px-4`}
           >
             <h1 className="font-bold text-[28px] capitalize mb-2">upcoming</h1>
@@ -196,7 +206,7 @@ const UpcomingTaskPage = () => {
               newTitles &&
               `${formatMonthComing(new Date(newTitles[index + 1]))}`
             }`}</h4>
-            {!state.isList ? (
+            {!getState() ? (
               <div className="flex justify-end gap-2 pb-2 border-b-gray-300">
                 <div
                   onClick={page > 0 ? () => previous() : undefined}
@@ -226,7 +236,7 @@ const UpcomingTaskPage = () => {
             >
               <div
                 className={`  ${
-                  state.isList
+                  getState()
                     ? "h-[100vh] overflow-y-scroll"
                     : ` flex  gap-2 ml-[${-100 * page}%]`
                 } `}

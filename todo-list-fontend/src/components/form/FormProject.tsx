@@ -8,6 +8,8 @@ import useOpenModal from '../../hooks/useOpenModal';
 import { Tag } from './FormTask';
 import BoxTitle from './BoxTitle';
 import { showTag } from '../../utils/tag';
+import useTheme from '../../hooks/useTheme';
+import {  hoverMode, sidebarMode } from '../../utils/theme';
 export type SectionItem = {
     id: number,
     name: string,
@@ -24,12 +26,7 @@ type formProject = {
 const FormProject = ({isInbox = true,tag,onclick} : formProject ) => {
     const project = useSelector((state: state) => state.project)
     const {isShow,handleToggleModel} = useOpenModal(false);
-    console.log(project);
-    console.log(isInbox);
-    
-    
-    console.log(tag);
-    
+    const {theme} = useTheme();
     const handleClick = (project?: ProjectInfo, 
         section?: SectionItem) => {
         
@@ -49,8 +46,8 @@ const FormProject = ({isInbox = true,tag,onclick} : formProject ) => {
                  {tag && showTag(tag)}
             </BoxTitle>
             {isShow && 
-                <div className='absolute w-[200px] z-10 py-2 top-[40px] left-0 box-calen bg-white rounded-lg'>
-                    <div className='menu-hover flex justify-between items-center px-2'>
+                <div className={`absolute w-[200px] z-10 py-2 top-[40px] left-0 box-calen ${sidebarMode[theme.mode]()} rounded-lg`}>
+                    <div className={`${hoverMode[theme.mode]()} flex justify-between items-center px-2`}>
                         {project.inbox && <ProjectItem onClick={handleClick} project={project.inbox}></ProjectItem>}
                         {isInbox && <IconMenu className='text-primary text-[14px]' icon='fa-solid fa-check'></IconMenu>}
                     </div>
@@ -65,9 +62,10 @@ const FormProject = ({isInbox = true,tag,onclick} : formProject ) => {
 };
 
 const ProjectItem = ({project,onClick} : {project: ProjectInfo,onClick:(project?: ProjectInfo, section?: SectionItem) => void}) => {
+    const {theme} = useTheme();
     return (
         <div>
-           <div className='cursor-pointer py-1 px-4 menu-hover' onClick={() => onClick(project)}># {project.name}</div>
+           <div className={`cursor-pointer py-1 px-4 ${hoverMode[theme.mode]()}`} onClick={() => onClick(project)}># {project.name}</div>
            <div className=''>
             <SectionList onClick={onClick} project={project}></SectionList>
            </div> 
@@ -99,9 +97,10 @@ const SectionList = ({project,onClick} : {project: ProjectInfo,onClick:(project?
     );
 }
 const SectionItem = ({section,onClick} : {section: SectionItem, onClick: () => void}) => {
+    const {theme} = useTheme();
     return (
         <>
-            <span className='menu-hover pl-10 pr-2 flex gap-2 items-center' onClick={onClick}>
+            <span className={`${hoverMode[theme.mode]()} pl-10 pr-2 flex gap-2 items-center`} onClick={onClick}>
                 <IconMenu className='text-[14px]' icon="fa-regular fa-square"></IconMenu>
                 {section.name}
             </span>

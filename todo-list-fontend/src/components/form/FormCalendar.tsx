@@ -5,6 +5,8 @@ import IconMenu from "../web/IconMenu";
 import { colorMark, mark } from "../../constaints/mark";
 import useOpenModal from "../../hooks/useOpenModal";
 import BoxTitle from "./BoxTitle";
+import useTheme from "../../hooks/useTheme";
+import { hoverMode, sidebarMode } from "../../utils/theme";
 export type Day = {
   day:
     | "sunday"
@@ -135,6 +137,7 @@ const FormCalendar = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchDate, setSearchDate] = useState<Day>();
   const { isShow: show, handleToggleModel } = useOpenModal(false);
+  const {theme} = useTheme();
   useEffect(() => {
     if (isToday) {
       onClick(generateDate(new Date(), "Today"));
@@ -195,7 +198,7 @@ const FormCalendar = ({
           
         {show && (
           <div
-            className={`absolute  w-[300px] py-2 z-50 left-0 top-[40px] rounded-lg box-calen bg-white`}
+            className={`absolute  w-[300px] py-2 z-50 left-0 top-[40px] rounded-lg box-calen ${sidebarMode[theme.mode]()}`}
           >
             <div className="py-2">
               {currentDay && currentDay.day ? (
@@ -247,9 +250,10 @@ const CalendarItem = ({
   className?: string;
   onclick: () => void;
 }) => {
+  const {theme} = useTheme();
   return (
     <div
-      className={`capitalize px-2 py-2 text-[15px] flex justify-between menu-hover ${className}`}
+      className={`capitalize px-2 py-2 text-[15px] flex justify-between ${hoverMode[theme.mode]()} ${className}`}
       onClick={onclick}
     >
       <div className="flex gap-2 items-center">

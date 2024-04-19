@@ -10,27 +10,27 @@ const SidebarSetting = () => {
     menu = [
         {
             path: `/app/settings/account`,
-            item: "Account",
+            item: "account",
             icon: `fa-solid fa-inbox`
         },
         {
             path: "/app/settings/general",
-            item: "General",
+            item: "general",
             icon: `fa-solid fa-calendar-week`
         },
         {
             path: "/app/settings/advanced",
-            item: "Advanced",
+            item: "advanced",
             icon: `fa-regular fa-calendar-days`
         },
         {
             path: "/app/settings/subscription",
-            item: "Subscription",
+            item: "subscription",
             icon: `fa-solid fa-filter`
         },
         {
             path: "/app/settings/theme",
-            item: "Theme",
+            item: "theme",
             icon: `fa-solid fa-filter`
         }
     ]

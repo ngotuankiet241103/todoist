@@ -25,7 +25,7 @@ export type stateApp = {
         isList: boolean
         group: ProjectGroupKeyEx
         filter: Filter
-    } | boolean | {[key: string]: string | number | boolean}
+    } | boolean | {[key: string]: string | number | boolean | ProjectGroupKeyEx | Filter}
 }
 type storageState = {
     [key: string]: boolean

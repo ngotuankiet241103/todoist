@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const HeaderAccountPage = ({title,onClick}: {title: string,onClick: () => void}) => {
     return (

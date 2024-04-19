@@ -1,7 +1,7 @@
 import useTheme from "../../hooks/useTheme";
 import { ProjectInfo, setProjectDetail } from "../../redux/reducer/projectSlice";
 import { NavLink } from "react-router-dom";
-import { bgMode, hoverMode, textColor, textMode } from "../../utils/theme";
+import { bgMode, hoverMode, sidebarMode, textColor, textMode } from "../../utils/theme";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import useOpenModal from "../../hooks/useOpenModal";
 import useCreateProject from "../../hooks/useCreateProject";
@@ -120,7 +120,7 @@ const MenuProjectItem = ({ onClose, position,onAddAbove,onAddBelow,editProject,o
     if (boxMenu.current) {
       const element = boxMenu.current;
       element.style.top = `${position.y - 60}px`;
-      element.style.left = `${position.x + 30}px`;
+      element.style.left = `${position.x + 40}px`;
     }
   }, []);
   
@@ -129,7 +129,7 @@ const MenuProjectItem = ({ onClose, position,onAddAbove,onAddBelow,editProject,o
       <div
         ref={boxMenu}
         onClick={(e) => e.stopPropagation()}
-        className={`absolute right-[-100%] text-black top-[-120px] w-[260px] h-[300px] ${textMode[theme.mode]()} rounded-lg ${bgMode[theme.mode]()} box-calen`}
+        className={`absolute right-[-100%] text-black top-[-120px] w-[260px] h-[300px] ${textMode[theme.mode]()} rounded-lg ${sidebarMode[theme.mode]()} box-calen`}
       >
         <MenuEditItem title="Add project above" onClick={onAddAbove}/>
         <MenuEditItem title="Add project below" onClick={onAddBelow}/>

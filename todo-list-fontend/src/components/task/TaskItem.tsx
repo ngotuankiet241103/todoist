@@ -12,7 +12,6 @@ import { priority } from "../form/FormPriority";
 import { bgColorPriority, colorPriority } from "../../constaints/flag";
 import { updateMethod } from "../../helper/api";
 import useOpenModal from "../../hooks/useOpenModal";
-import Hello from "./Hello";
 import { sidebarMode } from "../../utils/theme";
 import useTheme from "../../hooks/useTheme";
 const FormTask = lazy(() => import('../form/FormTask'))

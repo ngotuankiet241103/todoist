@@ -1,7 +1,6 @@
-import { formatDate } from "../utils/formatDate";
 import { useDispatch, useSelector } from "react-redux";
 import { state } from "../redux/store";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { reorder } from "../utils/dragContext";
 import DetaiTask from "../components/task/DetaiTask";
 import useOpenModal from "../hooks/useOpenModal";
@@ -16,23 +15,18 @@ import { updateTask } from "../redux/reducer/tasksSlice";
 // using some little inline style helpers to make the app look okay
 const key = "isToday";
 const HomePage = () => {
-  const { state } = useChangeView(key);
+  const { getState,getGroup,getFilter } = useChangeView(key);
   const detail = useSelector((state: state) => state.detail);
-  const { task, titles } = useTasks("today", state.group, state.filter);
+  const { task, titles } = useTasks("today", getGroup(), getFilter());
   const { isShow: showModal, task: taskDetail } = detail;
   const dispatch = useDispatch();
-  const date = new Date();
-  const today = formatDate(date);
   const { isShow, handleToggleModel } = useOpenModal(false);
   const {isShow: openFormTask,handleToggleModel: toggleFormTask} = useOpenModal(false);
-  console.log(state);
-  const onDragStart = (event) => {
-    console.log(event);
+  const onDragStart = () => {
+    
   };
-  const onDragEnd = (result) => {
-    console.log(result);
-
-    // dropped outside the list
+  const onDragEnd = (result : DropResult) => {
+    
     if(task){
       if (!result.destination) {
         return;
@@ -57,15 +51,9 @@ const HomePage = () => {
             value: { [key]: item },
           })
         );
-  
-        //   setItems({
-        //     ...items,
-        //     [key]: item,
-        //   });
       }
     }
-    // const element = document.querySelector(`#${result.draggableId}`);
-    // element.classList.remove("border-red-400");
+   
   };
   const handleClick = () => {
     if (isShow) {
@@ -73,8 +61,7 @@ const HomePage = () => {
     }
   };
   const Render = () => {
-    console.log(task);
-
+   
     return (
       <>
         {!task && <h1>Loading...</h1>}
@@ -82,11 +69,11 @@ const HomePage = () => {
           Object.entries(task).map(([key, value], index) => (
             <>
               <div
-                className={`${state.isList ? `box-${key}` : `min-w-[260px] max-w-[260px]`}`}
+                className={`${getState() ? `box-${key}` : `min-w-[260px] max-w-[260px]`}`}
               >
                 <SubProjectItem
                   isSection={false}
-                  isList={state.isList}
+                  isList={getState()}
                   code={key}
                   key={index}
                   title={titles && titles[index]}
@@ -103,7 +90,7 @@ const HomePage = () => {
       <div onClick={handleClick}>
         <div
           className={` mx-auto py-4 h-[100vh] ${
-            !state.isList ? "w-full" : "w-[800px]"
+            !getState() ? "w-full" : "md:w-[800px]"
           }`}
         >
           <h1 className="font-semibold">Today</h1>
@@ -113,7 +100,7 @@ const HomePage = () => {
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
           >
-            <div className={`${state.isList ? "" : "task-list"}`}>
+            <div className={`${getState() ? "" : "task-list"}`}>
               <Render></Render>
             </div>
           </DragDropContext>
@@ -123,9 +110,9 @@ const HomePage = () => {
             && (!openFormTask ? <TaskAdd onclick={() => toggleFormTask()}/>
             :
             (
-              <div className={state.isList ? 'w-full' : 'w-[280px]'}>
+              <div className={getState() ? 'w-full' : 'w-[280px]'}>
                  <FormTask
-                  isList={state.isList}
+                  isList={getState()}
                   isFixed={false}
                   visibile={true}
                   onclick={toggleFormTask}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import useTheme from "../../hooks/useTheme";
 import { color, mode } from "../../redux/reducer/stateSlice";
-import { bgColor, borderColor, textColor } from "../../utils/theme";
+import { bgColor, borderColor, borderMode, textColor } from "../../utils/theme";
 import ButtonForm from "../button/ButtonForm";
 
 const SettingThemePage = () => {
@@ -81,7 +81,7 @@ const GroupThemeMode= ({isSelected,title,value,onClick}: {isSelected:boolean, ti
                 </div>
             </div>
             <input  id={value} className="hidden" value={value} type="radio" checked={isSelected} onClick={onClick}/>
-            <label className={`flex h-[60px] w-[140px] cursor-pointer flex-col justify-center items-center rounded-lg border ${borderColor[value]}`}htmlFor={value}>
+            <label className={`flex h-[60px] w-[140px] cursor-pointer flex-col justify-center items-center rounded-lg border ${borderMode[value]()}`}htmlFor={value}>
                 <span>{title}</span>
             </label>
         </div>

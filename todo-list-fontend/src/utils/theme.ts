@@ -16,6 +16,15 @@ export const borderColor = {
     moonstone: "border-secondary",
     tangerine: "border-thirdary"
 }
+export const borderMode = {
+    light: () => 'border border-gray-400',
+    dark: () => 'border border-white',
+    custom: () => {
+        const date = new Date();
+        const time =  date.getHours();
+        return time > 18 ? 'border border-white' : 'border border-gray-400'
+    }
+}
 export const bgMode =  {
     light: () => 'bg-white',
     dark: () => 'bg-[#1E1E1E]',

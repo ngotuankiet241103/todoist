@@ -10,7 +10,7 @@ import { Filter } from "../../redux/reducer/stateSlice";
 import { useEffect, useRef, useState } from "react";
 import { TaskSliceKey } from "../../redux/reducer/tasksSlice";
 import useTheme from "../../hooks/useTheme";
-import { bgColor, bgMode, hoverBox, hoverMode, sidebarMode, textColor } from "../../utils/theme";
+import { bgColor, bgMode,  hoverMode, sidebarMode, textColor } from "../../utils/theme";
 
 type ViewFilter = {
   isShow: boolean;

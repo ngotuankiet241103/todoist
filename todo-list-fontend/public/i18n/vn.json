@@ -1,0 +1,24 @@
+{
+    "title": "Multi-language app 5",
+    "label": "Select another language!",
+    "about": "About",
+    "home": "Home",
+    "sidebar": {
+        "search": "Tìm kiếm",
+        "inbox": "Tin nhắn",
+        "today": "Hôm nay",
+        "upcoming": "Sắp tới",
+        "filter": "Lọc và tiêu đè",
+        "account": "Tài khoản",
+        "general": "Cài đặt",
+        "advanced": "Nâng cao",
+        "subscription": "Subscription",
+        "theme": "Thiết kế",
+        "myProject": "Dự án của tôi"
+    },
+    "feature": {
+        "add": "Thêm lịch"
+    }
+
+
+}

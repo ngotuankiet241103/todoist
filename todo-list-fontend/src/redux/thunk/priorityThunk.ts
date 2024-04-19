@@ -1,7 +1,7 @@
 import axios from "axios";
 import { env } from "../../helper/env";
 import { setPriority } from "../reducer/prioritySlice";
-import { useDispatch } from "react-redux";
+
 
 const priorityThunk = () =>  async (dispatch,actions) => {
     

@@ -7,6 +7,8 @@ import IconMenu from "../web/IconMenu";
 import BoxTitle from "./BoxTitle";
 import { useSelector } from "react-redux";
 import { state } from "../../redux/store";
+import useTheme from "../../hooks/useTheme";
+import { hoverMode, sidebarMode } from "../../utils/theme";
 export type priority = {
   id: number;
   name: string;
@@ -22,12 +24,10 @@ type formPriority = {
   isList: boolean,
 };
 const FormPriority = React.memo (({ onclick, isDefault, priority,isList }: formPriority) => {
-  console.log(useSelector((state: state) => state.priority));
   const priorities = useSelector((state: state) => state.priority);
-  
-  
+ 
   const { isShow, handleToggleModel } = useOpenModal(false);
-  console.log(priorities);
+  
   useEffect(() => {
     if (isDefault) {
       const priority = priorities.length > 0 &&  priorities.find(
@@ -72,9 +72,10 @@ const PriorityList = ({
   priorities: Priorities;
   onclick: (priority: priority, isVisible?: boolean) => void;
 }) => {
+  const {theme} = useTheme();
   return (
     <>
-      <div className="absolute w-[120px] z-10 top-[40px] left-0 bg-white box-calen rounded-lg ">
+      <div className={`absolute w-[120px] z-20 top-[40px] left-0 ${sidebarMode[theme.mode]()} box-calen rounded-lg `}>
         {priorities.length > 0 &&
           priorities.map((priority) => (
             <PriorityItem
@@ -94,12 +95,11 @@ type priorityItem = priority & {
   onClick: () => void;
 };
 const PriorityItem = ({ name, level, onClick }: priorityItem) => {
-  console.log(level);
-
+  const {theme} = useTheme();
   return (
     <>
       <div
-        className="px-2 py-1 menu-hover flex gap-2 items-center"
+        className={`px-2 py-1 ${hoverMode[theme.mode]()} flex gap-2 items-center`}
         onClick={onClick}
       >
         <IconMenu icon={flag[`${level}`]}></IconMenu>

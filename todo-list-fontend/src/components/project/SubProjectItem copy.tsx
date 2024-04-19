@@ -25,7 +25,7 @@ const SubProjectItem = ({
 }) => {
   const [section,setSection] = useState<SectionItem>();
   const {isShow,handleToggleModel} = useOpenModal(false);
-
+  const [isAction,setAction] = useState(false);
   const {handleRender} = useRender();
   useEffect(() => {
     const getSection = async () => {
@@ -81,13 +81,14 @@ const SubProjectItem = ({
     const data = {id: section?.id}
     removeSection("/sections",data);
   }
+  
   return (
     <div className="w-full">
       {!isShow ?
-      <div className="flex justify-between">
+      <div className="flex justify-between cursor-pointer" onMouseEnter={() => setAction(true)} onMouseLeave={() => setAction(false)}>
         
-        <h2 className="font-semibold mb-2 current-day">{title}</h2>
-        {isSection && section &&  <div className="flex gap-2">
+        <h2 className="font-semibold mb-2 current-day" >{title}</h2>
+        {isSection && section &&  <div className={`gap-2 ${isAction ? 'flex' : 'hidden'} text-[14px]`}>
           <span onClick={handleToggleModel}><i className="fa-solid fa-pen"></i></span>
           <span onClick={handleRemoveSection}><i className="fa-solid fa-trash"></i></span>
         </div>

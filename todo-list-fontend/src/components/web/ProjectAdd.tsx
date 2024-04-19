@@ -7,11 +7,13 @@ import useRender from "../../hooks/useRender";
 import { useSelector } from "react-redux";
 import { state } from "../../redux/store";
 import { useDispatch } from "react-redux";
+import useTheme from "../../hooks/useTheme";
+import { sidebarMode } from "../../utils/theme";
 
 const ProjectAdd = ({clickCancle,index}: {clickCancle: () => void,index?: number}) => {
     const [isAllow,setAllow] = useState(false);
     const project =  useSelector((state : state) => state.project.detail);
-  
+    const {theme} = useTheme();
     const projectName = useRef<HTMLInputElement>(null);
     const appProject = useSelector((state: state) => state.project);
     const redirect = useNavigate();
@@ -84,13 +86,13 @@ const ProjectAdd = ({clickCancle,index}: {clickCancle: () => void,index?: number
         }
     }
     return (
-        <div className='fixed inset-0  z-10 bg-[rgba(0,0,0,0.25)] flex justify-center items-center'>
-            <div className='w-[500px] bg-white rounded-lg p-2'>
+        <div className={`fixed inset-0  z-10 bg-[rgba(0,0,0,0.25)] flex justify-center items-center`}>
+            <div className={`w-[500px] ${sidebarMode[theme.mode]()} rounded-lg p-2`}>
                 <div className="flex flex-col gap-2">
                     <span>
                         Name project
                     </span>
-                    <input onChange={handleChangeProjectName} ref={projectName} defaultValue={project ? project?.name :''} placeholder="Enter your project" type="name" className="py-1 px-2 rounded-lg outline-none border boder-gray-400"/>
+                    <input onChange={handleChangeProjectName} ref={projectName} defaultValue={project ? project?.name :''} placeholder="Enter your project" type="name" className="bg-transparent py-1 px-2 rounded-lg outline-none border boder-gray-400"/>
                 </div>
                 <ButtonForm isReverse={true} title={`${project ? 'Save' : 'Add project'}`} isAllow={isAllow} clickCancle={clickCancle}  clickSubmit={handleAddProject}/>
             </div>

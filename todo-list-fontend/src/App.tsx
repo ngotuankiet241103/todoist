@@ -10,7 +10,6 @@ import CreateName from './components/auth/CreateName'
 import { useEffect } from 'react'
 import InboxPage from './pages/InboxPage'
 import UpcomingTaskPage from './pages/UpcomingTaskPage'
-
 import ProjectPage from './pages/ProjectPage copy'
 import FilterPage from './pages/FilterPage'
 import LabelPage from './pages/LabelPage'
@@ -19,6 +18,7 @@ import SettingAccountPage from './components/settings/SettingAccountPage'
 import SettingAccountEmail from './components/settings/SettingAccountEmail'
 import SettingAccountPassword from './components/settings/SettingAccountPassword'
 import SettingThemePage from './components/settings/SettingThemePage'
+import SettingGeneralPage from './components/settings/SettingGeneralPage'
 
 function App() {
  
@@ -39,6 +39,7 @@ function App() {
             <Route path='/app/settings/account/email' element={<SettingAccountEmail></SettingAccountEmail>}></Route>
             <Route path='/app/settings/account/password' element={<SettingAccountPassword></SettingAccountPassword>}></Route>
             <Route path='/app/settings/theme' element={<SettingThemePage></SettingThemePage>}></Route>
+            <Route path='/app/settings/general' element={<SettingGeneralPage></SettingGeneralPage>}></Route>
 
           </Route>
         </Route>

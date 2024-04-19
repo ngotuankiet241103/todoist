@@ -20,6 +20,8 @@ import useOpenModal from "../../hooks/useOpenModal";
 import LabelTaskList from "./LabelTaskList";
 import { Label } from "../../redux/reducer/labelSlice";
 import { updateState } from "../../redux/reducer/stateSlice";
+import useTheme from "../../hooks/useTheme";
+import { bgColor, bgMode, hoverMode, sidebarMode } from "../../utils/theme";
 
 
 const DetaiTask = ({ task }: { task: TaskResponse }) => {
@@ -50,6 +52,7 @@ const DetaiTask = ({ task }: { task: TaskResponse }) => {
   const {isShow,handleToggleModel} = useOpenModal(false);
   const isRender = useSelector((state : state) => state.status.isRender);
   const dispatchRedux = useDispatch();
+  const {theme} = useTheme();
   const handleCloseTask = async () => {
     history.back();
     console.warn(labelSelect);
@@ -176,7 +179,7 @@ const DetaiTask = ({ task }: { task: TaskResponse }) => {
  
   return (
     <div className="fixed inset-0 flex items-center justify-center  bg-task " onClick={onBlurBox}>
-      <div className="w-[800px] h-[600px] bg-white rounded-lg py-4 px-3">
+      <div className={`w-[800px] h-[600px] ${sidebarMode[theme.mode]()} rounded-lg py-4 px-3`}>
         <div className="flex justify-between">
           <NavLink
             onClick={handleMoveProject}
@@ -258,13 +261,13 @@ const DetaiTask = ({ task }: { task: TaskResponse }) => {
             </BaseMoreInfo>
             <BaseMoreInfo>
               <TileTask className=" relative mb-2 text-[16px]  ">
-                <div onClick={() => handleToggleModel()} className=" px-2 text-[16px] flex justify-between rounded-lg hover:bg-fill cursor-pointer">
+                <div onClick={() => handleToggleModel()} className={`px-2 text-[16px] flex justify-between rounded-lg ${hoverMode[theme.mode]()} cursor-pointer`}>
                   <span>Label</span>
                   <span>
                     <i className="fa-solid fa-plus"></i>
                   </span>
                 </div>
-                {isShow && <LabelTaskList onClick={handleCheckLabel} labelSelect={labelSelect} className="absolute top-[40px] box-calen py-2 left-0 w-[300px] z-20 bg-white"></LabelTaskList>}
+                {isShow && <LabelTaskList onClick={handleCheckLabel} labelSelect={labelSelect} className={`absolute top-[40px] box-calen py-2 left-0 w-[300px] z-20 ${sidebarMode[theme.mode]()}`}></LabelTaskList>}
               </TileTask>
 
               <div className="flex gap-2">

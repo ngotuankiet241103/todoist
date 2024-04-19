@@ -1,4 +1,3 @@
-import React from 'react';
 type Button = {
     classNames: string | undefined,
     content: string,

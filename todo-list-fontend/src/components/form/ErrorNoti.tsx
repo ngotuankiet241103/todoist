@@ -1,4 +1,3 @@
-import React from 'react';
 
 const ErrorNoti = ({message } : {message:string | undefined}) => {
     return (

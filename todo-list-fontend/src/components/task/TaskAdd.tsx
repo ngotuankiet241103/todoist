@@ -3,14 +3,14 @@ import useTheme from "../../hooks/useTheme";
 import { bgColor,  textColor } from "../../utils/theme";
 import { state } from "../../redux/store";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 
 const TaskAdd = ({className,onclick}: {className?: string,onclick: () => void}) => {
-    console.warn("show");
-    
     const  {theme}= useTheme();
     const isDragging = useSelector((state: state) => state.status.isDragging);
     const buttonAddTask = useRef<HTMLDivElement>(null);
+    const {t} = useTranslation();
     const getElement = () => {
         if(buttonAddTask.current){
 
@@ -60,7 +60,7 @@ const TaskAdd = ({className,onclick}: {className?: string,onclick: () => void}) 
                     <i className="fa-solid fa-plus"></i>
                 </span>
                 <span className={`text-[#ccc] font-semibold content-task-button ${className}`}>
-                    Add task
+                   {t('feature.add')}
                 </span>
             </div>
         </div>

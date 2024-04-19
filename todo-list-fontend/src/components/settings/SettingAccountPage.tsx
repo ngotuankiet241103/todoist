@@ -1,9 +1,4 @@
-import React, {
-  ReactNode,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactNode, useLayoutEffect, useRef, useState } from "react";
 import FrameSettingPage from "./FrameSettingPage";
 import { NavLink } from "react-router-dom";
 import CompoSettingPage from "./CompoSettingPage";
@@ -21,14 +16,12 @@ const SettingAccountPage = () => {
   const inputNameRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState(user?.avatar);
   const avatarRef = useRef<HTMLImageElement>(null);
-  console.warn(user);
   useLayoutEffect(() => {
-    console.warn(user);
 
     if (!image && user?.name) {
       getImageByName(user?.name, avatarRef);
     }
-  }, [image]);
+  }, [image,user?.name]);
   const handleBlueEdit = () => {
     if (inputNameRef.current && user?.name) {
       if (inputNameRef.current.value === user?.name) {
@@ -55,30 +48,32 @@ const SettingAccountPage = () => {
 
   const onSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     async function uploadFile() {
-      const file = e.target.files[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
-        try {
-          const response = await requestApi(
-            `/file/upload`,
-            "POST",
-            formData,
-            false,
-            "json",
-            {
-              "Content-type": "multipart/form-data",
+      if (e && e.target.files) {
+        const file = e.target.files[0];
+        if (file) {
+          const formData = new FormData();
+          formData.append("file", file);
+          try {
+            const response = await requestApi(
+              `/file/upload`,
+              "POST",
+              formData,
+              false,
+              "json",
+              {
+                "Content-type": "multipart/form-data",
+              }
+            );
+            if (response.status === 200) {
+              setImage(response.data.data);
+              const data: { [key: string]: string | null } = {
+                avatar: response.data.data,
+              };
+              updateAvatar(data);
             }
-          );
-          if (response.status === 200) {
-            setImage(response.data.data);
-            const data: { [key: string]: string | null } = {
-              avatar: response.data.data,
-            };
-            updateAvatar(data);
+          } catch (error) {
+            console.log(error);
           }
-        } catch (error) {
-          console.log(error);
         }
       }
     }
@@ -102,13 +97,13 @@ const SettingAccountPage = () => {
     setImage("");
   };
   return (
-    <FrameSettingPage title="Account" onClose={() => console.log(1)}>
+    <FrameSettingPage isScroll title="Account" >
       <div className="flex justify-between items-center py-4 mb-2 border-b-2 border-b-gray-400">
         <div className="">
           <span className="block font-semibold">Plan</span>
           <span className="block font-semibold">Beginer</span>
         </div>
-        <ButtonSetting >
+        <ButtonSetting>
           <NavLink to={"/app/settings/subcription"}>Manage plan</NavLink>
         </ButtonSetting>
       </div>
@@ -166,17 +161,11 @@ const SettingAccountPage = () => {
       <CompoSettingPage title="Password">
         {!user?.connected ? (
           <ButtonSetting>
-            <NavLink to={`${pathName}/password`}>
-
-              Add Password
-            </NavLink>
+            <NavLink to={`${pathName}/password`}>Add Password</NavLink>
           </ButtonSetting>
         ) : (
           <ButtonSetting>
-            <NavLink to={`${pathName}/password`}>
-
-              Change Password
-            </NavLink>
+            <NavLink to={`${pathName}/password`}>Change Password</NavLink>
           </ButtonSetting>
         )}
       </CompoSettingPage>

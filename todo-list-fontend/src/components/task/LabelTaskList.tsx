@@ -5,6 +5,7 @@ import LabelTaskItem from './LabelTaskItem';
 import { Label, updateLabel } from '../../redux/reducer/labelSlice';
 import requestApi from '../../helper/api';
 import { useDispatch } from 'react-redux';
+
 type LabelTaskList = {
     className?: string,
     labelSelect: Label[],
@@ -16,6 +17,7 @@ const LabelTaskList = ({className,labelSelect,onClick}: LabelTaskList) => {
     const [labelCreated,setLabelCreated] = useState("");
     const dispatch = useDispatch();
     const [labelCurrent,setLabelCurrent] = useState<Label[]>(labels);
+    
     const handleFindLabel = (value: string) => {
         const arr = labels.filter(label => label.name.includes(value));
         if(arr.length < 1){
@@ -44,9 +46,9 @@ const LabelTaskList = ({className,labelSelect,onClick}: LabelTaskList) => {
         }
     }
     return (
-        <div className={`py-1 rounded-lg ${className}`} onClick={(e) => e.stopPropagation()}>
-            <div className='px-2'>
-                <input ref={inputRef} onChange={(e) => handleFindLabel(e.target.value.trim())} className='rounded-lg px-2 py-1 w-full outline-none border border-gray-400' placeholder='Type a label'/>
+        <div className={`py-1 rounded-lg ${className} ` }  onClick={(e) => e.stopPropagation()}>
+            <div className='px-2 mb-2'>
+                <input ref={inputRef} onChange={(e) => handleFindLabel(e.target.value.trim())} className='rounded-lg px-2 py-1 w-full outline-none border border-gray-400 bg-transparent' placeholder='Type a label'/>
             
             </div>
             {labelCurrent.length > 0 && labelCurrent.map((label,index) => <LabelTaskItem index={index} onClick={onClick}  isSelected={selectedLabel(labelSelect,label.id)} key={label.id} label={label}></LabelTaskItem>)}

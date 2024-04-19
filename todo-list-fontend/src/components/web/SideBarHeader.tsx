@@ -3,7 +3,6 @@ import FrameSideBar from './FrameSideBar';
 import MenuList from './MenuList';
 import Search from './Search';
 import User from './User';
-import useOpenModal from '../../hooks/useOpenModal';
 import FormTask from '../form/FormTask';
 import { useSelector } from 'react-redux';
 import { state } from '../../redux/store';
@@ -11,10 +10,11 @@ import MyProject from './MyProject';
 import SearchContainer from '../search/SearchContainer';
 import useAddTask from '../../hooks/useAddTask';
 import useOpenBoxSearch from '../../hooks/useOpenBoxSearch';
-import { bgColor, hoverMode, sidebarMode, textColor } from '../../utils/theme';
+import { bgColor,  textColor } from '../../utils/theme';
 import useTheme from '../../hooks/useTheme';
 import useCreateProject from '../../hooks/useCreateProject';
 import ProjectAdd from './ProjectAdd';
+import { useTranslation } from 'react-i18next';
 
 export type MenuItem = {
     path: string,
@@ -30,25 +30,26 @@ const SideBarHeader = ({onClick}: {onClick?: () => void}) => {
     const {isOpen,closeBox}  = useOpenBoxSearch();
     const {theme} = useTheme();
     const {project,toggleProject} = useCreateProject();
+    const {t} = useTranslation();
     menu = [
         {
             path: `/app/project/${ inbox ?inbox.code : ""}`,
-            item: "Inbox",
+            item: "inbox",
             icon: `fa-solid fa-inbox`
         },
         {
             path: "/app/today",
-            item: "Today",
+            item: "today",
             icon: `fa-solid fa-calendar-week`
         },
         {
             path: "/app/upcoming",
-            item: "Upcoming",
+            item: "upcoming",
             icon: `fa-regular fa-calendar-days`
         },
         {
             path: "/app/filters-labels",
-            item: "Filters&Labels",
+            item: "filter",
             icon: `fa-solid fa-filter`
         }
     ]
@@ -67,12 +68,12 @@ const SideBarHeader = ({onClick}: {onClick?: () => void}) => {
             <div className='mb-4'>
                     <User></User>
             </div>
-            <div className={`mb-2 flex gap-2 px-2  hover:bg-gray-100 transition-all py-2`}>
+            <div className={`mb-2 flex gap-2 px-2 cursor-pointer  hover:bg-gray-100 transition-all py-2`}>
                     <span className={`w-[22px] h-[22px] flex justify-center items-center ${bgColor[theme.color]}  text-white rounded-full`} >
                         <i className="fa-solid fa-plus"></i>
                     </span>
                     <span className={`${textColor[theme.color]} font-semibold`} onClick={() => showModel()}>
-                        Add task
+                        {t('feature.add')}
                     </span>
                 </div>
                 <Search onClick={closeBox}></Search>

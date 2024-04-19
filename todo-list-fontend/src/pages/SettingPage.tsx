@@ -1,7 +1,6 @@
 
 import { Outlet, useNavigate } from 'react-router-dom';
 import SidebarSetting from '../components/web/SidebarSetting';
-import { useMemo } from 'react';
 import { bgMode } from '../utils/theme';
 import useTheme from '../hooks/useTheme';
 

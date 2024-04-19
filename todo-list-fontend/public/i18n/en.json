@@ -1,0 +1,24 @@
+{
+    "title": "Multi-language app 5",
+    "label": "Select another language!",
+    "about": "About",
+    "home": "Home",
+    "sidebar": {
+        "search": "Search",
+        "inbox": "Inbox",
+        "today": "Today",
+        "upcoming": "Upcoming",
+        "filter": "Filter&Labels",
+        "account": "Account",
+        "general": "General",
+        "advanced": "Advanced",
+        "subscription": "Subscription",
+        "theme": "Theme",
+        "myProject": "My projects"
+    },
+    "feature": {
+        "add": "Add task"
+    }
+
+
+}

@@ -4,12 +4,11 @@ import { state } from '../redux/store';
 import storage from '../helper/storage';
 import { Filter, updateState} from '../redux/reducer/stateSlice';
 import { useDispatch } from 'react-redux';
-import { ProjectGroupKey } from './useTasks';
+import { ProjectGroupKey, ProjectGroupKeyEx } from './useTasks';
 
 const useChangeView = (label: string) => {
     let state  = useSelector((state: state) => state.status[`${label}`]);
-    console.log(label);
-
+   
     const dispatch = useDispatch();
     if(typeof state == "boolean"){
         state = {
@@ -43,7 +42,7 @@ const useChangeView = (label: string) => {
                 labelCode: []
             }
         };
-      
+        state = value;
         dispatch(updateState({key: label,value}))
     }
    
@@ -68,11 +67,48 @@ const useChangeView = (label: string) => {
             dispatch(updateState({key: label,value:  {...state,filter}}));
         }
     }
+    const getState = () : boolean  => {
+        return typeof state.isList != "boolean" ? false : state.isList;
+    }
+    const getGroup = () : ProjectGroupKeyEx => {
+        
+        return  getValueIfProjectGroupKeyEx(state.group) || "default";
+    } 
+    function hasProjectGroupKeyEx(obj: ProjectGroupKeyEx | string | number | boolean | Filter): obj is ProjectGroupKeyEx  {
+        return obj === "default" || obj === "due date" || obj === "priority" || obj === "project";
+    }
+    
+    // Function to get the value of group if it's of type ProjectGroupKeyEx
+    function getValueIfProjectGroupKeyEx(obj: ProjectGroupKeyEx | string | number | boolean | Filter ): ProjectGroupKeyEx | null {
+        if (hasProjectGroupKeyEx(obj)) {
+            return obj;
+        } else {
+            return null;
+        }
+    }
+    const getFilter = () : Filter => {
+        return  getFilterFromObj(state.filter) || {labelCode: [],priorityCode: []};
+    }
+    function checkFilter(obj: ProjectGroupKeyEx | string | number | boolean | Filter): obj is Filter  {
+        return typeof obj === "object";
+    }
+    
+    // Function to get the value of group if it's of type ProjectGroupKeyEx
+    function getFilterFromObj(obj: ProjectGroupKeyEx | string | number | boolean | Filter ): Filter | null {
+        if (checkFilter(obj)) {
+            return obj;
+        } else {
+            return null;
+        }
+    }
    return {
     state,
     handleChangeView,
     handleChangeGroup,
-    handleChangeFilter
+    handleChangeFilter,
+    getState,
+    getGroup,
+    getFilter
    }
 };
 

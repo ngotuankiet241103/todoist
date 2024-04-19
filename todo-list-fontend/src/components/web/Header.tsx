@@ -11,11 +11,11 @@ import { state } from "../../redux/store";
 import labelThunk from "../../redux/thunk/labelThunk";
 import priorityThunk from "../../redux/thunk/priorityThunk";
 import useOpenModal from "../../hooks/useOpenModal";
-import SettingPage from "../../pages/SettingPage";
 import useTheme from "../../hooks/useTheme";
 import { bgMode, textMode } from "../../utils/theme";
-import useOpenBoxSearch from "../../hooks/useOpenBoxSearch";
 import { ToastContainer } from "react-toastify";
+import i18n from "../../i18n";
+import useLanguage from "../../hooks/useLanguage";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -23,11 +23,13 @@ const Header = () => {
   const isRender = useSelector((state: state) => state.status.isRender);
   const {isShow,handleToggleModel} = useOpenModal(false);
   const {theme} = useTheme();
-  
+  const {language} = useLanguage();
   useEffect(() => {
     dispatch(userThunk());
     dispatch(labelThunk());
     dispatch(priorityThunk());
+    i18n.changeLanguage(language.code);
+    
     return () => {};
   }, []);
   useEffect(() => {

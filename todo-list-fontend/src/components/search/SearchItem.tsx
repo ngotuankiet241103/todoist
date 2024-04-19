@@ -1,14 +1,14 @@
 
 import { searchItem } from './SearchContainer';
 import IconMenu from '../web/IconMenu';
-import { borderColor, hoverColor, hoverMode } from '../../utils/theme';
+import { borderColor } from '../../utils/theme';
 import useTheme from '../../hooks/useTheme';
 
 const SearchItem = ({search}: {search: searchItem}) => {
     return (
         <div>
             <h4 className='px-2 py-1 text-[13px] text-gray-300'>{search.title}</h4>
-            {search.menu.length > 0 && search.menu.map(item => <SearchSubItem menu={item}></SearchSubItem>)}
+            {search.menu.length > 0 && search.menu.map((item,index) => <SearchSubItem key={index} menu={item}></SearchSubItem>)}
         </div>
     );
 };

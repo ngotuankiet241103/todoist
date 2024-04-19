@@ -2,7 +2,6 @@ import React from 'react';
 type CompoSettingPage  = {
     title: string
     children: React.ReactNode
-
 }
 const CompoSettingPage = ({title,children} :CompoSettingPage) => {
     return (

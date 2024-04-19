@@ -1,9 +1,7 @@
 import { TaskListResponse } from "../components/task/TaskList";
 
 export const grid = 8;
-export const getListStyle = (isDraggingOver) => ({
-  
-  
+export const getListStyle = () => ({
   width: '100%'
 });
 export const reorder = (

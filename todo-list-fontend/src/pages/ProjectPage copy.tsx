@@ -1,5 +1,8 @@
 import { useParams } from "react-router-dom";
-import { DragDropContext } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  DropResult
+} from "react-beautiful-dnd";
 import { reorder } from "../utils/dragContext";
 import useOpenModal from "../hooks/useOpenModal";
 import { useSelector } from "react-redux";
@@ -14,7 +17,7 @@ import useRender from "../hooks/useRender";
 import useChangeView from "../hooks/useChangeView";
 import BaseWeb from "../components/web/BaseWeb";
 import useTasks from "../hooks/useTasks";
-import {  useRef } from "react";
+import { useRef } from "react";
 import { updateState } from "../redux/reducer/stateSlice";
 import { bgColor, textColor } from "../utils/theme";
 import useTheme from "../hooks/useTheme";
@@ -25,22 +28,24 @@ import { TaskResponse } from "../components/task/TaskItem";
 import { formatDate } from "../utils/formatDate";
 import { ToastContainer } from "react-toastify";
 
-export async function handleUpdateTask<T>(api: string, data: T,move?: "section" | "priority" | "expiredAt") {
+export async function handleUpdateTask<T>(
+  api: string,
+  data: T,
+  move?: "section" | "priority" | "expiredAt"
+) {
   try {
     const response = await requestApi(api, "PUT", data);
     if (response.status === 200) {
-      if(move){
-        const task : TaskResponse = response.data;
-        if(move === "expiredAt"){
-          
-          toastMessage("success", `Move task to date ${formatDate(new Date(task[move]))}`);
-         
-        }
-        else{
-          
+      if (move) {
+        const task: TaskResponse = response.data;
+        if (move === "expiredAt") {
+          toastMessage(
+            "success",
+            `Move task to date ${formatDate(new Date(task[move]))}`
+          );
+        } else {
           toastMessage("success", `Move task to ${move} ${task[move].name}`);
         }
-        
       }
     }
   } catch (error) {
@@ -53,13 +58,13 @@ type TaskUpdate = {
 const ProjectPage = () => {
   const type = "project";
   const { projectCode } = useParams();
-  const { state } = useChangeView(projectCode || "");
+  const { getFilter,getState,getGroup } = useChangeView(projectCode || "");
   const box = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const { task, sections, titles } = useTasks(
     type,
-    state.group,
-    state.filter,
+    getGroup(),
+    getFilter(),
     projectCode
   );
   const priorities = useSelector((state: state) => state.priority);
@@ -72,10 +77,10 @@ const ProjectPage = () => {
   const { isShow: openFormTask, handleToggleModel: toggleFormTask } =
     useOpenModal(false);
   const { theme } = useTheme();
-  const onDragStart = (event) => {
+  const onDragStart = () => {
     dispatch(updateState({ key: "isDragging", value: true }));
   };
-  const onDragEnd = async (result) => {
+  const onDragEnd = async (result: DropResult) => {
     console.log(result);
     if (task) {
       // dropped outside the list
@@ -91,7 +96,7 @@ const ProjectPage = () => {
         const arr = Array.from(task[key]);
         let [newItem] = arr.splice(index, 1);
         arr.slice(index, 1);
-        if (state.group == "priority") {
+        if (getGroup() == "priority") {
           const priority =
             priorities &&
             priorities.find((priority) => priority.code === desKey);
@@ -114,14 +119,14 @@ const ProjectPage = () => {
             value: { [key]: arr, [desKey]: item },
           })
         );
-        if (state.group == "default") {
+        if (getGroup() == "default") {
           if (sections.some((section) => section.code === desKey)) {
             const data: TaskUpdate = {
               id: Number(result.draggableId),
               sectionCode: desKey,
             };
 
-            handleUpdateTask(`/tasks/project/section`, data,"section");
+            handleUpdateTask(`/tasks/project/section`, data, "section");
           } else if (desKey === projectCode) {
             const data: TaskUpdate = {
               id: Number(result.draggableId),
@@ -129,14 +134,14 @@ const ProjectPage = () => {
             };
             handleUpdateTask(`/tasks/project`, data);
           }
-        } else if (state.group == "priority") {
+        } else if (getGroup() == "priority") {
           const data: TaskUpdate = {
             id: Number(result.draggableId),
             priorityCode: desKey,
           };
           console.log(data);
 
-          handleUpdateTask(`/tasks/priority`, data,"priority");
+          handleUpdateTask(`/tasks/priority`, data, "priority");
         }
       } else {
         const index: number = result.source.index;
@@ -173,49 +178,59 @@ const ProjectPage = () => {
       handleToggleModel();
     }
   };
-  const handleToggleModal = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    console.log(e);
-
-    const getParent = (e: HTMLElement, element: string) => {
-      while (!e.classList.contains(element)) {
+  const handleToggleModal = (
+    e?: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) : void => {
+   
+    const getParent = (e: HTMLElement | null, element: string) => {
+      while (e && !e.classList.contains(element)) {
         e = e.parentElement;
       }
       return e;
     };
-    const parent = getParent(e.target, "add-section");
-    console.log(parent);
-    console.warn(parent);
-    parent.classList.toggle("h-[30px]");
-    parent.classList.toggle("h-[160px]");
-    const form: HTMLDivElement = parent.querySelector(".form-section");
-    const sectionItem: HTMLDivElement = parent.querySelector(".title-section");
-    sectionItem.classList.toggle("section-item");
-    form.classList.toggle("hidden");
+    if (e) {
+      const element = e.target;
+      if (element instanceof HTMLElement) {
+        const parent = getParent(element, "add-section");
+        if (parent) {
+          parent.classList.toggle("h-[30px]");
+          parent.classList.toggle("h-[160px]");
+          const form: HTMLDivElement | null =
+            parent.querySelector(".form-section");
+          const sectionItem: HTMLDivElement | null =
+            parent.querySelector(".title-section");
+          if (form && sectionItem) {
+            sectionItem.classList.toggle("section-item");
+            form.classList.toggle("hidden");
+          }
+        }
+      }
+    }
   };
 
   const Render = () => {
-    console.warn(task);
-
     return (
       <>
         {!task && <h1>Loading...</h1>}
         {task &&
           Object.entries(task).map(([key, value], index) => (
-            <>
+            
               <div
+                key={index}
                 className={`${
-                  state.isList ? `box-${key}` : `min-w-[260px] max-w-[260px]`
+                   getState() ? `box-${key}` : `min-w-[260px] max-w-[260px]`
                 }`}
+                onClick={(e) => e.target}
               >
                 <SubProjectItem
-                  isSection={state.group === "default"}
-                  isList={state.isList}
+                  isSection={getGroup() === "default"}
+                  isList={ getState()}
                   code={key}
                   key={index}
                   title={titles && titles[index]}
                   tasks={value}
                 ></SubProjectItem>
-                {state.group == "default" && state.isList && (
+                {getGroup() == "default" &&  getState() && (
                   <div
                     className={`add-section ${
                       isAddSection ? "" : "h-[30px]"
@@ -249,7 +264,7 @@ const ProjectPage = () => {
                   </div>
                 )}
               </div>
-            </>
+            
           ))}
       </>
     );
@@ -261,7 +276,7 @@ const ProjectPage = () => {
           <div
             ref={box}
             className={` mx-auto py-4 h-[100vh] ${
-              state.isList ? "w-[800px]" : ""
+               getState() ? "w-[800px]" : ""
             }`}
           >
             <DragDropContext
@@ -269,15 +284,15 @@ const ProjectPage = () => {
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
             >
-              <div className={`${state.isList ? "" : "task-list"}`}>
+              <div className={`${ getState() ? "" : "task-list"}`}>
                 {task &&
                   Object.keys(task).length < 1 &&
                   (!openFormTask ? (
                     <TaskAdd onclick={() => toggleFormTask()} />
                   ) : (
-                    <div className={state.isList ? "w-full" : "w-[280px]"}>
+                    <div className={ getState() ? "w-full" : "w-[280px]"}>
                       <FormTask
-                        isList={state.isList}
+                        isList={ getState()}
                         isFixed={false}
                         visibile={true}
                         onclick={toggleFormTask}
@@ -285,7 +300,7 @@ const ProjectPage = () => {
                     </div>
                   ))}
                 <Render></Render>
-                {!state.isList && (
+                {! getState() && (
                   <div className="mb-2 flex-1">
                     <div className="add-section h-[100px] overflow-x-hidden">
                       {!isAddSection ? (
@@ -310,7 +325,7 @@ const ProjectPage = () => {
           {showModal && taskDetail && <DetaiTask task={taskDetail}></DetaiTask>}
         </div>
       </BaseWeb>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 };

@@ -52,7 +52,7 @@ const useTasks = (
   useEffect(() => {
     
     const handleUpdateTask = (taskO: Task) => {
-      const data: ProjectCommon = taskO.getTask(group);
+      const data: ProjectGroup = taskO.getTask(group);
       setTitle(taskO.getTitle(group));
       dispatch(setTasks({ key: type, data }));
     };
@@ -344,8 +344,6 @@ class Task {
       },
       priority: () => {
         return this.priority.reduce((prev, priority) => {
-          console.log(priority);
-
           return {
             ...prev,
             [priority.code]: this.tasks.filter(

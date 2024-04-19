@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -82,7 +83,7 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception {
-        http.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.disable())
+        http.cors(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
@@ -113,8 +114,8 @@ public class WebSecurityConfig{
                                         .requestMatchers("/api/v1/signup").permitAll()
                                         .requestMatchers("/auth/**")
                                         .permitAll().requestMatchers("/oauth2/**").permitAll()
-                                        .anyRequest()
-                                        .permitAll()
+                                        .anyRequest().authenticated()
+
 
                 )
                 .oauth2Login(

@@ -1,6 +1,6 @@
-import React from 'react';
+
 import useTheme from '../../hooks/useTheme';
-import { bgColor, bgMode } from '../../utils/theme';
+import { bgColor} from '../../utils/theme';
 
 const ButtonForm = ({isAllow,title,isReverse,clickCancle,clickSubmit} : {
     isAllow: boolean,

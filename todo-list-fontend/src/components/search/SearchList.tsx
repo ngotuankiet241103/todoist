@@ -132,7 +132,7 @@ const SearchList = ({list,inputRef}: {list: searchItem[],inputRef: RefObject<HTM
                 <i className="fa-solid fa-magnifying-glass"></i>
                 <input onChange={handleOnChange} ref={inputRef} type='text' className=' bg-transparent px-2 flex-1 outline-none border-none' placeholder='Search or type a command..'/>
             </div>
-            {newList.length > 0  && newList.map(menu => <SearchItem   search={menu} ></SearchItem>)}
+            {newList.length > 0  && newList.map((menu,index) => <SearchItem key={index}   search={menu} ></SearchItem>)}
             
         </>
     );

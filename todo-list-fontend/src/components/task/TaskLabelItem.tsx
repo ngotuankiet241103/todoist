@@ -1,4 +1,3 @@
-import React from 'react';
 import { Label } from '../../redux/reducer/labelSlice';
 
 const TaskLabelItem = ({label} : {label: Label}) => {
