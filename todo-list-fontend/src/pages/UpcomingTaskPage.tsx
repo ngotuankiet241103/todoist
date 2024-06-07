@@ -36,6 +36,7 @@ const UpcomingTaskPage = () => {
   const [index, setIndex] = useState(0);
   const { theme } = useTheme();
   useEffect(() => {
+   
     if (box.current) {
       const element = box.current;
       if (!getState()) {
@@ -43,7 +44,7 @@ const UpcomingTaskPage = () => {
           100 * (newTitles ? newTitles.length / 6 : 0)
         }%`;
       } else {
-        element.style.width = `w-[100%]`;
+        element.style.width = `100%`;
         element.style.marginLeft = `0px`;
       }
     }

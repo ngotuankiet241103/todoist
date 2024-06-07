@@ -7,7 +7,17 @@ spring:
     hibernate:
       ddl-auto: none
       enable_lazy_load_no_trans: true
-
+  mail:
+    host: smtp.gmail.com
+    port: 25
+    username: ngotuankiet12347@gmail.com
+    password: iqen aszq byda byug
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   security:
     oauth2:
       client:

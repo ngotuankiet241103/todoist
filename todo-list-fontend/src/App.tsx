@@ -19,6 +19,7 @@ import SettingAccountEmail from './components/settings/SettingAccountEmail'
 import SettingAccountPassword from './components/settings/SettingAccountPassword'
 import SettingThemePage from './components/settings/SettingThemePage'
 import SettingGeneralPage from './components/settings/SettingGeneralPage'
+import TaskCompletedPage from './pages/TaskCompletedPage'
 
 function App() {
  
@@ -34,6 +35,7 @@ function App() {
           <Route path='/app/project/:projectCode' element={<ProjectPage></ProjectPage>}></Route>
           <Route path='/app/label/:labelCode' element={<LabelPage></LabelPage>}></Route>
           <Route path='/app/filters-labels' element={<FilterPage></FilterPage>}></Route>
+          <Route path='/app/tasks/completed' element={<TaskCompletedPage></TaskCompletedPage>}></Route>
           <Route path='/app/settings' element={<SettingPage></SettingPage>}>
             <Route path='/app/settings/account' element={<SettingAccountPage></SettingAccountPage>}></Route>
             <Route path='/app/settings/account/email' element={<SettingAccountEmail></SettingAccountEmail>}></Route>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { days } from "../../constaints/days";
 import { months } from "../../constaints/month";
 import IconMenu from "../web/IconMenu";
@@ -7,6 +7,13 @@ import useOpenModal from "../../hooks/useOpenModal";
 import BoxTitle from "./BoxTitle";
 import useTheme from "../../hooks/useTheme";
 import { hoverMode, sidebarMode } from "../../utils/theme";
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
+
 export type Day = {
   day:
     | "sunday"
@@ -138,6 +145,9 @@ const FormCalendar = ({
   const [searchDate, setSearchDate] = useState<Day>();
   const { isShow: show, handleToggleModel } = useOpenModal(false);
   const {theme} = useTheme();
+  const value : Dayjs | null = dayjs(currentDay?.date);
+
+
   useEffect(() => {
     if (isToday) {
       onClick(generateDate(new Date(), "Today"));
@@ -181,6 +191,19 @@ const FormCalendar = ({
       setSearchDate(newDate);
     }
   }
+  const handleChooseCalendar = (date: Dayjs) => {
+    console.log(date);
+    
+    const dateChoose  = new Date(date.toDate())
+    const day : Day = {
+      date: dateChoose,
+      day: days[dateChoose.getDay()],
+      mark: ""
+    }
+    console.log(dateChoose);
+    
+    handleClick(day);
+  }
   return (
     <>
       <div className="relative capitalize">
@@ -198,7 +221,7 @@ const FormCalendar = ({
           
         {show && (
           <div
-            className={`absolute  w-[300px] py-2 z-50 left-0 top-[40px] rounded-lg box-calen ${sidebarMode[theme.mode]()}`}
+            className={`absolute  w-[300px] py-2 z-50 left-0 rounded-lg box-calen ${sidebarMode[theme.mode]()}`}
           >
             <div className="py-2">
               {currentDay && currentDay.day ? (
@@ -235,7 +258,15 @@ const FormCalendar = ({
                   ></CalendarItem>
                 ))}
             </div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+      
+        
+              <DateCalendar value={value} onChange={handleChooseCalendar} />
+       
+      
+          </LocalizationProvider>
           </div>
+          
         )}
       </div>
     </>

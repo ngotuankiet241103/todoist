@@ -8,7 +8,7 @@ export default function requestApi<T>(endpoint:string,method:string,body?:T,isRe
     let headers = {
         "Accept": "application/json",
         "Content-type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Origin": "*",
         'Access-Control-Allow-Credentials': 'true'
         
     };

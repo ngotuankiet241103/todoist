@@ -1,12 +1,10 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import FormCalendar, { Day } from "./FormCalendar";
 import FormPriority, { priority } from "./FormPriority";
 import FormProject, { SectionItem } from "./FormProject";
 import { ProjectInfo } from "../../redux/reducer/projectSlice";
 import requestApi from "../../helper/api";
-import { formatDate } from "../../utils/formatDate";
-import { setTask } from "../../redux/reducer/taskSlice";
-import { useDispatch } from "react-redux";
+
 import OtherForm from "./OtherForm";
 
 import { Label } from "../../redux/reducer/labelSlice";
@@ -64,7 +62,7 @@ const FormTask = ({ isFixed, visibile, onclick, task,isUpcoming,isList }: formTa
   };
   
   const { state, setDate, setPriority, setTag, reset } = useTask(initialValue);
-  const [isAllow, setAllow] = useState(task?.title);
+  const [isAllow, setAllow] = useState(!!task?.title);
   const [isToday, setIsToday] = useState(isUpcoming ? false : state.date?.mark === "Today");
   const [isChooseLabel, setChooseLabel] = useState(false);
   const label = useSelector((state: state) => state.label);
@@ -159,7 +157,7 @@ const FormTask = ({ isFixed, visibile, onclick, task,isUpcoming,isList }: formTa
         <div
           className={`${
             isFixed
-              ? `fixed inset-0 z-[100] flex justify-center items-center`
+              ? `fixed inset-0 z-[100] flex justify-center mt-10`
               : `border border-gray-300 rounded-lg`
           }`}
         >
@@ -167,7 +165,7 @@ const FormTask = ({ isFixed, visibile, onclick, task,isUpcoming,isList }: formTa
             onClick={(e) => e.preventDefault()}
             className={`${
               isFixed
-                ? ` w-[600px] z-[100] rounded-lg ${commomCss} bg-white shadow-slate-600 box-task`
+                ? ` w-[600px] z-[100] rounded-lg ${commomCss} h-[220px] bg-white shadow-slate-600 box-task`
                 : ` w-full ${commomCss}`
             } relative
             `}

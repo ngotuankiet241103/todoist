@@ -19,16 +19,6 @@ const SidebarSetting = () => {
             icon: `fa-solid fa-calendar-week`
         },
         {
-            path: "/app/settings/advanced",
-            item: "advanced",
-            icon: `fa-regular fa-calendar-days`
-        },
-        {
-            path: "/app/settings/subscription",
-            item: "subscription",
-            icon: `fa-solid fa-filter`
-        },
-        {
             path: "/app/settings/theme",
             item: "theme",
             icon: `fa-solid fa-filter`

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -72,8 +73,6 @@ public class WebSecurityConfig{
 
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
-
-
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http
                 .getSharedObject(AuthenticationManagerBuilder.class);
@@ -100,20 +99,10 @@ public class WebSecurityConfig{
                         httpCookieOAuth2AuthorizationRequestRepository ->
                                 httpCookieOAuth2AuthorizationRequestRepository
 
-//                .requestMatchers("/",
-//                        "/error",
-//                        "/favicon.ico",
-//                        "/**/*.png",
-//                        "/**/*.gif",
-//                        "/**/*.svg",
-//                        "/**/*.jpg",
-//                        "/**/*.html",
-//                        "/**/*.css",
-//                        "/**/*.js").permitAll()
-
                                         .requestMatchers("/api/v1/signup").permitAll()
                                         .requestMatchers("/auth/**")
                                         .permitAll().requestMatchers("/oauth2/**").permitAll()
+                                        .requestMatchers(HttpMethod.GET,"/api/v1/priorities").permitAll()
                                         .anyRequest().authenticated()
 
 

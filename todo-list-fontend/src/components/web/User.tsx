@@ -47,7 +47,7 @@ const User = () => {
                     <span onClick={handleExpandMenu}><i className="fa-solid fa-table-columns"></i></span>
                 </div>
                 <div className={`${isShow ? 'block' : 'hidden'} overflow-hidden z-20 absolute top-[100%] left-0 w-[200px] rounded-lg ${bgMode[theme.mode]()} box-calen`}>
-                    <NavLink to={"/app/settings"} ><div className={`px-3 py-2 ${hoverMenu[theme.mode](theme.color)} cursor-pointer`} onClick={handleOpenSettings} >Settings</div></NavLink>
+                    <NavLink to={"/app/settings/account"} ><div className={`px-3 py-2 ${hoverMenu[theme.mode](theme.color)} cursor-pointer`} onClick={handleOpenSettings} >Settings</div></NavLink>
                     <div className={`cursor-pointer px-3 py-2  ${hoverMenu[theme.mode](theme.color)}`} onClick={handleLogout}>Logout</div>
                 </div>
             </div>

@@ -31,8 +31,7 @@ const SubProjectItem = ({
     const getSection = async () => {
       try {
         const response = await requestApi(`/sections/code/${code}`,"GET");
-        console.warn(code);
-        
+      
         if(response.status === 200){
           setSection(response.data);
         }

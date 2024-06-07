@@ -9,8 +9,11 @@ import com.todo.todolistbackend.repository.TaskRepository;
 import com.todo.todolistbackend.request.TaskRequest;
 import com.todo.todolistbackend.request.TaskUpdateRequest;
 import com.todo.todolistbackend.service.*;
+import com.todo.todolistbackend.util.FormatDate;
 import com.todo.todolistbackend.util.HandleStrings;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,9 +21,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,20 +63,11 @@ public class TaskServiceImpl implements TaskService {
                 .priority(priority)
                 .isCompleted(false)
                 .isDeleted(false)
-                .expiredAt(taskRequest.getExpiredAt() != null ? formatDate(taskRequest.getExpiredAt(),23,59,59) : null)
+                .expiredAt(taskRequest.getExpiredAt() != null ? FormatDate.formatDate(taskRequest.getExpiredAt(),23,59,59) : null)
                 .build();
         return task;
     }
-    private Date formatDate(Date date,int hour,int minutes,int second){
-        Instant instant = date.toInstant();
-        // Create a ZonedDateTime from the Instant
-        // You can specify the time zone you want to use
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        // Extract LocalDate from ZonedDateTime
-        LocalDate localDate = zonedDateTime.toLocalDate();
-        LocalDateTime lastMoment = LocalDateTime.of(localDate, LocalTime.of(hour, minutes, second));
-        return Date.from(lastMoment.atZone(ZoneId.systemDefault()).toInstant());
-    }
+
     @Override
     public List<TaskDTO> findAllByProjectCode(String projectCode, List<String> priorityCode, List<String> labelCode) {
         List<Task> tasks = null;
@@ -83,14 +75,14 @@ public class TaskServiceImpl implements TaskService {
             tasks = taskRepository.findByProjectCodeWithConditional(projectCode,priorityCode,labelCode);
         }
         else if(priorityCode.size() > 0 && labelCode != null){
-            tasks = taskRepository.findByProjectCodeAndPriorityCode(projectCode,priorityCode,Sort.by(Sort.Direction.ASC,"expiredAt"));
+            tasks = taskRepository.findByProjectCodeAndPriorityCode(projectCode,priorityCode);
 
         }
         else if(priorityCode != null && labelCode.size() > 0){
             tasks = taskRepository.findByProjectCodeAndLabelCode(projectCode,labelCode);
         }
         else{
-            tasks = taskRepository.findAllByProjectCode(projectCode,Sort.by(Sort.Direction.ASC,"expiredAt"));
+            tasks = taskRepository.findAllByProjectCode(projectCode);
         }
 
         return mappingList(tasks);
@@ -107,7 +99,7 @@ public class TaskServiceImpl implements TaskService {
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
             LocalDate localDateYesterday = zonedDateTime.toLocalDate();
             Date tommorow = Date.from(localDateYesterday.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()) ;
-            tommorow = formatDate(tommorow,00,00,00);
+            tommorow = FormatDate.formatDate(tommorow,00,00,00);
             List<Task> tasks = null;
             if(priorityCode.size() > 0  && labelCode.size()> 0){
                 tasks = taskRepository.findByExpiredAtAndUserIdConditional(tommorow,userPrincipal.getId(),priorityCode,labelCode);
@@ -168,7 +160,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Object updateExpiredAt(TaskUpdateRequest taskUpdateRequest) {
         Task task = taskRepository.findById(taskUpdateRequest.getId()).orElseThrow(() -> new BadRequestException("Task is not exits"));
-        task.setExpiredAt(formatDate(taskUpdateRequest.getExpiredAt(),23,59,59));
+        task.setExpiredAt(FormatDate.formatDate(taskUpdateRequest.getExpiredAt(),23,59,59));
         return singleMapping(taskRepository.save(task));
     }
 
@@ -228,7 +220,7 @@ public class TaskServiceImpl implements TaskService {
 
                 // Parse the string to obtain a Date object
                 Date tommorow = convertDate(to,"plus");
-                tommorow = formatDate(tommorow,00,00,00);
+                tommorow = FormatDate.formatDate(tommorow,00,00,00);
 
                 if(from.equals("")) {
                     List<TaskDTO> taskDto = findAllByExpiredAt(to,priorityCode,labelCode);
@@ -237,7 +229,7 @@ public class TaskServiceImpl implements TaskService {
                 }
                 else{
                     Date yesterday = convertDate(from,"minus");
-                    yesterday = formatDate(yesterday,23,59,59);
+                    yesterday = FormatDate.formatDate(yesterday,23,59,59);
                     if(priorityCode.size() > 0  && labelCode.size()> 0){
                         tasks = taskRepository.findTaskUpcomingByExpiredAtAndUserIdConditional(yesterday,tommorow,userPrincipal.getId(),priorityCode,labelCode);
                     }
@@ -275,6 +267,25 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return mappingList(tasks);
+    }
+
+    @Override
+    public Object findTaskCompleted(int page) {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = userPrincipal.getId();
+        Pageable pageRequest =  PageRequest.of(page ,7,Sort.by(Sort.Direction.DESC,"expiredAt"));
+        List<Task> tasks = taskRepository.findByIsCompletedAndUserId(true,userId);
+        Paging pagination = new Paging(page);
+
+        Map<String,Object> response = new HashMap<>();
+        response.put("data",tasks);
+        response.put("pagination",pagination);
+        return response ;
+    }
+
+    @Override
+    public List<Task> findByExpiredAt(Date today, Date lastToday) {
+        return taskRepository.findByExpiredAt(today,lastToday);
     }
 
     private List<TaskDTO> mappingList(List<Task> tasks){

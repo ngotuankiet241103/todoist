@@ -24,6 +24,11 @@ public class TaskController {
 
         return ResponseEntity.ok(taskService.findTaskUpcoming(from,to,priorityCode,labelCode));
     }
+    @GetMapping("/tasks/completed")
+    public ResponseEntity<?> getTaskCompleted(@RequestParam(name = "page",defaultValue = "1") int page){
+
+        return ResponseEntity.ok(taskService.findTaskCompleted(page));
+    }
     @GetMapping("/tasks/label/{label-code}")
     public ResponseEntity<?> getTasksByLabelCode(@PathVariable("label-code") String projectCode,
                                                    @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,

@@ -1,6 +1,9 @@
 package com.todo.todolistbackend.repository;
 
 import com.todo.todolistbackend.entity.Task;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,10 +16,12 @@ import java.util.Optional;
 public interface TaskRepository extends Repository<Task,Long> {
      String excludeCompleted = " AND t.isCompleted=false";
      String excludeDeleted = " AND t.isDeleted=false";
-    String excludeNativeCompleted = " AND t.is_completed=false";
-    String excludeNativeDeleted = " AND t.is_deleted=false";
-     String excludeCommon = excludeCompleted + excludeDeleted;
-     String excludeNativeCommon =  excludeNativeCompleted + excludeNativeDeleted;
+     String sortCommon = " ORDER BY t.expiredAt ";
+     String excludeNativeCompleted = " AND t.is_completed=false";
+     String excludeNativeDeleted = " AND t.is_deleted=false";
+     String excludeCommon = excludeCompleted + excludeDeleted + sortCommon;
+     String sortNative = " ORDER BY t.expired_at";
+     String excludeNativeCommon =  excludeNativeCompleted + excludeNativeDeleted + sortNative;
     long countByProjectId(long id);
 
     List<Task> findAllByProjectIdOrSectionId(long projectId, int i);
@@ -34,19 +39,19 @@ public interface TaskRepository extends Repository<Task,Long> {
     void deleteById(long id);
     // query base on project
     @Query("SELECT t FROM Task t WHERE t.project.code = ?1 " + excludeCommon)
-    List<Task> findAllByProjectCode(String projectCode,Sort sort);
+    List<Task> findAllByProjectCode(String projectCode);
     @Query(value = "SELECT t.* FROM Task t WHERE t.project_id = (SELECT q.id FROM Project q WHERE q.code = ?1) AND t.priority_id IN (SELECT p.id FROM priority p WHERE p.code IN ?2)  AND t.id IN (SELECT d.task_id FROM task_labels d WHERE d.labels_id IN (SELECT l.id FROM label l WHERE l.code IN ?3) ) " + excludeCommon,nativeQuery = true)
     List<Task> findByProjectCodeWithConditional(String projectCode, List<String> priorityCode, List<String> labelCode);
     @Query(value = "SELECT t FROM Task t WHERE t.project.code = ?1 AND t.priority.code IN ?2 " + excludeCommon)
-    List<Task> findByProjectCodeAndPriorityCode(String projectCode, List<String> priorityCode,Sort sort);
+    List<Task> findByProjectCodeAndPriorityCode(String projectCode, List<String> priorityCode);
     @Query(value = "SELECT t.* FROM Task t WHERE t.project_id = (SELECT q.id FROM Project q WHERE q.code = ?1) AND t.id IN (SELECT d.task_id FROM task_labels d WHERE d.labels_id IN (SELECT l.id FROM label l WHERE l.code IN ?2) ) " +excludeNativeCommon,nativeQuery = true)
     List<Task> findByProjectCodeAndLabelCode(String projectCode, List<String> labelCode);
     // query for task expired
-    @Query("SELECT t,d FROM Task t JOIN User d ON t.user.id = d.id WHERE t.expiredAt < ?1 AND t.user.id = ?2 " + excludeCommon + " ORDER BY t.id DESC")
+    @Query("SELECT t,d FROM Task t JOIN User d ON t.user.id = d.id WHERE t.expiredAt < ?1 AND t.user.id = ?2 " + excludeCommon )
     List<Task> findByExpiredAtAndUserId( Date tommorow, Long id);
     @Query(value = "SELECT t.* FROM Task t WHERE t.expired_at < ?1 AND t.user_id = ?2 AND t.priority_id IN (SELECT p.id FROM priority p WHERE p.code IN ?3)  AND t.id IN (SELECT d.task_id FROM task_labels d WHERE d.labels_id IN (SELECT l.id FROM label l WHERE l.code IN ?4) ) " + excludeNativeCommon,nativeQuery = true)
     List<Task> findByExpiredAtAndUserIdConditional(Date tommorow, Long id, List<String> priorityCode, List<String> labelCode);
-    @Query("SELECT t FROM Task t  WHERE t.expiredAt < ?1 AND t.user.id = ?2 AND t.priority.code IN ?3 " + excludeCommon +" ORDER BY t.id DESC")
+    @Query("SELECT t FROM Task t  WHERE t.expiredAt < ?1 AND t.user.id = ?2 AND t.priority.code IN ?3 " + excludeCommon )
     List<Task> findByExpiredAtAndUserIdAndPriorityCode(Date tommorow, Long id, List<String> priorityCode );
     @Query(value = "SELECT t.* FROM Task t WHERE t.expired_at < ?1 AND t.user_id = ?2 AND t.id IN (SELECT d.task_id FROM task_labels d WHERE d.labels_id IN (SELECT l.id FROM label l WHERE l.code IN ?3) ) " + excludeNativeCommon,nativeQuery = true)
     List<Task> findByExpiredAtAndUserIdAndLabelCode(Date tommorow, Long id, List<String> labelCode);
@@ -88,4 +93,11 @@ public interface TaskRepository extends Repository<Task,Long> {
     @Modifying
     @Query("UPDATE Task t SET t.isDeleted = true WHERE t.section.id = ?1 ")
     void deleteBySectionId(long id);
+
+
+    @Query("SELECT t,u FROM Task t JOIN User u ON t.user.id = u.id WHERE t.isCompleted = ?1 AND t.user.id = ?2 " )
+    List<Task> findByIsCompletedAndUserId( boolean isCompleted,long userId);
+
+    @Query("SELECT t,u FROM Task t JOIN User u ON t.user.id = u.id  WHERE t.expiredAt > ?1 AND t.expiredAt <= ?2 " + excludeCompleted )
+    List<Task> findByExpiredAt(Date today,Date lastDay);
 }
