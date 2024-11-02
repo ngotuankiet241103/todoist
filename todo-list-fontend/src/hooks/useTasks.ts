@@ -54,6 +54,7 @@ const useTasks = (
     const handleUpdateTask = (taskO: Task) => {
       const data: ProjectGroup = taskO.getTask(group);
       setTitle(taskO.getTitle(group));
+    
       dispatch(setTasks({ key: type, data }));
     };
     const handleTask = async () => {
@@ -97,6 +98,8 @@ const useTasks = (
             "GET",
             ""
           );
+          console.log(response);
+          
           if (response.status === 200) {
             const taskO = new Task(
               type,
@@ -162,7 +165,7 @@ const useTasks = (
       }
     };
     handleTask();
-  }, [projectCode, group, filter, upcoming, isRender]);
+  }, [projectCode, group,filter, upcoming, isRender]);
 
   return {
     task,
@@ -226,8 +229,9 @@ class Task {
     
       default: () => {
         if (this.type === "project" && this.projectCode) {
+          
           const response: TasksSlice = {
-            [this.projectCode]: this.tasks.filter(
+            [`${this.projectCode}`]: this.tasks.filter(
               (task) => task.project.code == this.projectCode && !task.section
             ),
           };
@@ -240,7 +244,7 @@ class Task {
 
               return {
                 ...prev,
-                [section.code]: this.tasks.filter((task) =>
+                [`${section.code}`]: this.tasks.filter((task) =>
                   task.section ? task.section.code === section.code : false
                 ),
               };
@@ -251,6 +255,8 @@ class Task {
             ...data,
           };
         } else if (this.type === "today") {
+         
+          
           let response: ProjectGroup = {};
           response =
             this.tasks &&

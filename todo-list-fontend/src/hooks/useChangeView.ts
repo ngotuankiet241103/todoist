@@ -8,6 +8,7 @@ import { ProjectGroupKey, ProjectGroupKeyEx } from './useTasks';
 
 const useChangeView = (label: string) => {
     let state  = useSelector((state: state) => state.status[`${label}`]);
+   console.log(storage.get(label));
    
     const dispatch = useDispatch();
     if(typeof state == "boolean"){

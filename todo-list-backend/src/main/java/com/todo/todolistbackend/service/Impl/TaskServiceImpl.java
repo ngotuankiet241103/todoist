@@ -288,7 +288,14 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findByExpiredAt(today,lastToday);
     }
 
+    @Override
+    public Object getAllByType(Pageable pageable) {
+
+        return mappingList(taskRepository.findAll(pageable));
+    }
+
     private List<TaskDTO> mappingList(List<Task> tasks){
+        System.out.println("size" +  tasks.size());
         return tasks.stream().map(task -> singleMapping(task)).collect(Collectors.toList());
     }
     private TaskDTO singleMapping(Task task){

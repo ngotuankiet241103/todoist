@@ -32,14 +32,14 @@ type storageState = {
 }
 export type Filter = {[key in "priorityCode" | "labelCode" ]: string[]}
 const initialValue : stateApp= {
-    isExpand: storage.get(expand_key),
-    isRender: storage.get(key) || false,
+    isExpand:  false,
+    isRender:  false,
     isDragging: false,
     projectAdd: {
         isAddProject: false,
        
     },
-    theme: storage.get<theme>("theme") || {
+    theme:  {
         mode: "light",
         color: "todoist"
     },

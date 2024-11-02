@@ -18,6 +18,7 @@ const useTheme = () => {
     const confirmUpdate = () => {
         storage.set("theme", theme)
     }
+    
     return {
         theme,
         updateMode,

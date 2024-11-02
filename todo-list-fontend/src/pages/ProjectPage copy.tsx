@@ -61,10 +61,12 @@ const ProjectPage = () => {
   const { getFilter,getState,getGroup } = useChangeView(projectCode || "");
   const box = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
+  const filter = getFilter();
+  const group = getGroup()
   const { task, sections, titles } = useTasks(
     type,
-    getGroup(),
-    getFilter(),
+    group,
+    filter,
     projectCode
   );
   const priorities = useSelector((state: state) => state.priority);

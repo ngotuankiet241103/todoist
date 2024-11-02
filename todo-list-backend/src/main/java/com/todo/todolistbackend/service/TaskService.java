@@ -4,6 +4,7 @@ import com.todo.todolistbackend.dto.TaskDTO;
 import com.todo.todolistbackend.entity.Task;
 import com.todo.todolistbackend.request.TaskRequest;
 import com.todo.todolistbackend.request.TaskUpdateRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
 import java.util.List;
@@ -41,4 +42,6 @@ public interface TaskService {
     Object findTaskCompleted(int page);
 
     List<Task> findByExpiredAt(Date today, Date lastToday);
+
+    Object getAllByType(Pageable pageable);
 }

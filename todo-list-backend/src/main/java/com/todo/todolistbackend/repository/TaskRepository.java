@@ -100,4 +100,8 @@ public interface TaskRepository extends Repository<Task,Long> {
 
     @Query("SELECT t,u FROM Task t JOIN User u ON t.user.id = u.id  WHERE t.expiredAt > ?1 AND t.expiredAt <= ?2 " + excludeCompleted )
     List<Task> findByExpiredAt(Date today,Date lastDay);
+
+    List<Task> findAll(Pageable pageable);
+    @Query("SELECT t FROM Task t WHERE t.isCompleted = ?1  ")
+    List<Task> findAllByIsCompleted(boolean isCompleted);
 }

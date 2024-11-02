@@ -16,8 +16,8 @@ const taskSlice = createSlice(
         initialState: initialValue,
         reducers: {
             setTasks: (state, actions) => {
-                
-                state[actions.payload.key] = [
+              
+                state[`${actions.payload.key}`] = [
                     
                     ...actions.payload.data
                 ]

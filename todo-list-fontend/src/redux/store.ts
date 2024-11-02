@@ -31,5 +31,9 @@ export const store = configureStore<state>({
         tasks: tasksSlice,
         priority: prioritySlice,
         search: searchSlice
-    }
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+          serializableCheck: false,  // Tắt kiểm tra tuần tự hóa
+        }),
 })

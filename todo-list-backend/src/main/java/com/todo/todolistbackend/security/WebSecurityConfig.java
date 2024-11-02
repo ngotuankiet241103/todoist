@@ -100,7 +100,7 @@ public class WebSecurityConfig{
                                 httpCookieOAuth2AuthorizationRequestRepository
 
                                         .requestMatchers("/api/v1/signup").permitAll()
-                                        .requestMatchers("/auth/**")
+                                        .requestMatchers("/api/v1/login")
                                         .permitAll().requestMatchers("/oauth2/**").permitAll()
                                         .requestMatchers(HttpMethod.GET,"/api/v1/priorities").permitAll()
                                         .anyRequest().authenticated()

@@ -36,7 +36,8 @@ const Header = () => {
     dispatch(projectThunk());
     dispatch(projectInfoThunk());
   }, [isRender]);
-
+  console.log(theme);
+  
   return (
     <>
       <div className={`md:flex ${bgMode[theme.mode]()} ${textMode[theme.mode]()}`}>

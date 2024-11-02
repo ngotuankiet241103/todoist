@@ -23,7 +23,7 @@ const LoginPage = () => {
             
             console.log(JSON.stringify(value));
             
-            const response = await methodPost("/login",value);
+            const response = await methodPost("/auth/login",value);
             if(response.status === 200){
                 const token : Token = response.data;
                 setToken(token)

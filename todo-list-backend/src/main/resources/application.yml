@@ -60,6 +60,12 @@ app:
       - myiosapp://oauth2/redirect
 api:
   prefix: api/v1
+cloud:
+  cloudName: dzumda5fa
+  apiKey: 959631823469922
+  apiSecret: NFULtoFFUlC6qCPN1BSiRw5KUGk
+  secure: true
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

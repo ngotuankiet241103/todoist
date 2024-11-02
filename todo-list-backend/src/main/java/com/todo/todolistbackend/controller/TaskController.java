@@ -5,6 +5,9 @@ import com.todo.todolistbackend.request.TaskUpdateRequest;
 import com.todo.todolistbackend.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +20,10 @@ public class TaskController {
     private final TaskService taskService;
     @GetMapping("/tasks/upcoming")
     public ResponseEntity<?> getTaskUpcoming(@RequestParam(name = "from",defaultValue = "") String from,
-                                             @RequestParam(name = "to",defaultValue = "") String to,
-                                             @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,
-                                             @RequestParam(name = "labelCode",defaultValue = "") List<String> labelCode
-                                             ){
+                                                     @RequestParam(name = "to",defaultValue = "") String to,
+                                                     @RequestParam(name = "priorityCode",defaultValue = "") List<String> priorityCode,
+                                                     @RequestParam(name = "labelCode",defaultValue = "") List<String> labelCode
+                                                     ){
 
         return ResponseEntity.ok(taskService.findTaskUpcoming(from,to,priorityCode,labelCode));
     }
@@ -89,5 +92,12 @@ public class TaskController {
     @PutMapping("/tasks/priority")
     public ResponseEntity<?> updatePriority(@RequestBody TaskUpdateRequest taskUpdateRequest){
         return ResponseEntity.ok(taskService.updatePriority(taskUpdateRequest));
+    }
+    @GetMapping("/tasks/all")
+    public ResponseEntity<?> getAll(@RequestParam(value = "page",defaultValue = "1") int page,
+                                    @RequestParam(value = "limit" ,defaultValue = "6") int limit){
+        Pageable pageable = PageRequest.of(page - 1,limit);
+
+        return ResponseEntity.ok(taskService.getAllByType(pageable));
     }
 }

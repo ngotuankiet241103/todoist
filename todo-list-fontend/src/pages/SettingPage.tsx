@@ -8,6 +8,7 @@ const SettingPage = () => {
     const redirect = useNavigate();
     const {theme} = useTheme();
     const handleCloseSetting = () => {
+      
         const url = sessionStorage.getItem("prev");
         if(url){
             redirect(url);
