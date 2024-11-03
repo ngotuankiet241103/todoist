@@ -99,7 +99,7 @@ public class WebSecurityConfig{
                         httpCookieOAuth2AuthorizationRequestRepository ->
                                 httpCookieOAuth2AuthorizationRequestRepository
                                         .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
-                                        .requestMatchers("/api/v1/signup").permitAll()
+                                        .requestMatchers("/api/v1/sign-up").permitAll()
                                         .requestMatchers("/api/v1/login")
                                         .permitAll().requestMatchers("/oauth2/**").permitAll()
                                         .requestMatchers(HttpMethod.GET,"/api/v1/priorities").permitAll()
