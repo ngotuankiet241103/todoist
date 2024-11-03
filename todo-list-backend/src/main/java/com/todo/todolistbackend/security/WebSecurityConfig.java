@@ -98,7 +98,7 @@ public class WebSecurityConfig{
                 .authorizeHttpRequests(
                         httpCookieOAuth2AuthorizationRequestRepository ->
                                 httpCookieOAuth2AuthorizationRequestRepository
-
+                                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
                                         .requestMatchers("/api/v1/signup").permitAll()
                                         .requestMatchers("/api/v1/login")
                                         .permitAll().requestMatchers("/oauth2/**").permitAll()
@@ -115,6 +115,7 @@ public class WebSecurityConfig{
                                         .authorizationEndpoint(
                                                 authorizationEndpointConfig ->
                                                         authorizationEndpointConfig
+
                                                                 .baseUri("/oauth2/authorize")
                                                                 .authorizationRequestRepository(cookieAuthorizationRequestRepository())
 
