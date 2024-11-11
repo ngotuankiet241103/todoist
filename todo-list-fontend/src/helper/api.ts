@@ -92,6 +92,7 @@ export type Token = {
     refresh_token: string | null
 }
 export const setToken = (token : Token) => {
+   
     token.access_token &&  localStorage.setItem("access_token",token.access_token);
     document.cookie =  `refresh_token=${token.refresh_token};expires;path=/`;
 }

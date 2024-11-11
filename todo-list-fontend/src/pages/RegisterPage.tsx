@@ -15,7 +15,7 @@ const RegisterPage = () => {
     const handleLogin = async (value : FormData)  => {
         try {
             setSubmitting(true)
-            const response = await methodPost("/sign-up",value)
+            const response = await methodPost("/auth/sign-up",value)
             console.log(response);
             
             if(response.status === 200){

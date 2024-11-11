@@ -18,6 +18,7 @@ public class TaskMappingImpl implements TaskMapping {
                 .code(task.getCode())
                 .description(task.getDescription())
                 .expiredAt(task.getExpiredAt())
+                .isCompleted(task.isCompleted())
                 .build();
     }
 }

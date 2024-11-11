@@ -20,4 +20,5 @@ public class TaskDTO {
     private ProjectDTO project;
     private SectionDTO section;
     private List<LabelDTO> labels;
+    private boolean isCompleted;
 }
