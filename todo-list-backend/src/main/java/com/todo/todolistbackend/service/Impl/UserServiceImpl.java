@@ -58,9 +58,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Object updatePassword(UserUpdateRequest user) {
+        System.out.println(user.getPassword());
+        System.out.println(user.getNewPassword());
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new BadRequestException("user is not exist"));
-        if(!passwordEncoder.matches(userEntity.getPassword(),userPrincipal.getPassword())){
+        if(!passwordEncoder.matches(user.getPassword(),userEntity.getPassword())){
             ErrorResponse errorResponse = new ErrorResponse(new Date(),"password is not matches", HttpStatus.BAD_REQUEST.toString());
             return  errorResponse;
         }

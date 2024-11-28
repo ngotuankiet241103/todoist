@@ -104,4 +104,6 @@ public interface TaskRepository extends Repository<Task,Long> {
     List<Task> findAll(Pageable pageable);
     @Query("SELECT t FROM Task t WHERE t.isCompleted = ?1  ")
     List<Task> findAllByIsCompleted(boolean isCompleted);
+
+    List<Task> findAllByUserId(Pageable pageable,long userId);
 }

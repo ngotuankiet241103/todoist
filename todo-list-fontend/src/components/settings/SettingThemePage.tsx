@@ -63,6 +63,7 @@ const GroupThemeColor = ({isSelected,title,value,onClick}: {isSelected:boolean, 
                 <span>{title}</span>
                 {isSelected && <span className={textColor[value]}><i className="fa-solid fa-check"></i></span>}
             </label>
+            
             <input className="hidden" id={value} value={value} type="radio" checked={isSelected} onClick={onClick}/>
         </div>
     );

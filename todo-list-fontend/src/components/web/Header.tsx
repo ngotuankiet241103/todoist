@@ -42,7 +42,7 @@ const Header = () => {
     <>
       <div className={`md:flex ${bgMode[theme.mode]()} ${textMode[theme.mode]()}`}>
         <div className="max-sm:hidden" >
-          {!isExpand && <SideBarHAeader></SideBarHeader>}
+          {!isExpand && <SideBarHeader></SideBarHeader>}
         </div>
         <div className="max-sm:hidden">
           {isExpand && (
